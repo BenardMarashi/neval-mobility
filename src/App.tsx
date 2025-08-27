@@ -6,6 +6,7 @@ import Carousel from './components/Carousel';
 import ScrollStack, { ScrollStackItem } from './components/ScrollStack';
 import CarDetail from './pages/CarDetail';
 import { Car, Zap, Battery, Gauge } from 'lucide-react';
+import { PerformanceDebugger } from './hooks/usePerformance';
 
 const App: React.FC = () => {
   const vehicles = [
