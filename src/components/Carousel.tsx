@@ -1,10 +1,12 @@
-// src/components/Carousel.tsx - FULLY FIXED VERSION
+// src/components/Carousel.tsx - COMPLETE FIXED VERSION
+// Replace your entire Carousel.tsx file with this content
 
 import { useEffect, useState, useRef } from "react";
 import { Link } from 'react-router-dom';
 import { motion, PanInfo, useMotionValue } from "framer-motion";
 import React, { JSX } from "react";
-import { FiCircle, FiCode, FiFileText, FiLayers, FiLayout } from "react-icons/fi";
+// Using lucide-react instead of react-icons for React 19 compatibility
+import { Circle, Code, FileText, Layers, Layout } from "lucide-react";
 
 export interface CarouselItem {
   title: string;
@@ -29,35 +31,35 @@ const DEFAULT_ITEMS: CarouselItem[] = [
     title: "Text Animations",
     description: "Cool text animations for your projects.",
     id: 1,
-    icon: <FiFileText className="h-[16px] w-[16px] text-white" />,
+    icon: <FileText className="h-4 w-4 text-white" />,
     link: "#",
   },
   {
     title: "Animations",
     description: "Smooth animations for your projects.",
     id: 2,
-    icon: <FiCircle className="h-[16px] w-[16px] text-white" />,
+    icon: <Circle className="h-4 w-4 text-white" />,
     link: "#",
   },
   {
     title: "Components",
     description: "Reusable components for your projects.",
     id: 3,
-    icon: <FiLayers className="h-[16px] w-[16px] text-white" />,
+    icon: <Layers className="h-4 w-4 text-white" />,
     link: "#",
   },
   {
     title: "Backgrounds",
     description: "Beautiful backgrounds and patterns for your projects.",
     id: 4,
-    icon: <FiLayout className="h-[16px] w-[16px] text-white" />,
+    icon: <Layout className="h-4 w-4 text-white" />,
     link: "#",
   },
   {
     title: "Common UI",
     description: "Common UI components are coming soon!",
     id: 5,
-    icon: <FiCode className="h-[16px] w-[16px] text-white" />,
+    icon: <Code className="h-4 w-4 text-white" />,
     link: "#",
   },
 ];
@@ -76,7 +78,6 @@ export default function Carousel({
   loop = false,
   round = false,
 }: CarouselProps): JSX.Element {
-  const containerPadding = 0;
   const itemWidth = baseWidth;
   const trackItemOffset = itemWidth + GAP;
 

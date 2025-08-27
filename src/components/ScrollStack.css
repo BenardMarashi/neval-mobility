@@ -1,179 +1,237 @@
-/* src/components/ScrollStack.css - Optimized Version */
+/* src/components/ScrollStack.css - SIMPLE PAGE SCROLL VERSION */
 
-.scroll-stack-scroller {
+.scroll-stack-container {
   position: relative;
   width: 100%;
-  height: 100vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
-  /* Remove smooth scrolling as Lenis handles it */
-  scroll-behavior: auto;
-  /* Force GPU acceleration */
-  -webkit-transform: translate3d(0,0,0);
-  transform: translate3d(0,0,0);
-  will-change: scroll-position;
-  /* Optimize scrolling performance */
-  contain: layout style paint;
-}
-
-.scroll-stack-inner {
-  padding-top: 20vh;
-  padding-left: 80px;
-  padding-right: 80px;
-  padding-bottom: 50rem;
-  min-height: 100vh;
-  /* Prevent reflow during scroll */
-  contain: layout style;
+  /* NO height restriction - uses page scroll */
+  /* NO overflow - uses page scroll */
+  padding-top: 100px; /* Space before first card */
+  background: transparent;
 }
 
 .scroll-stack-card {
-  position: relative;
-  width: 100%;
-  min-height: 500px;
-  padding: 80px;
+  position: sticky;
+  top: 100px; /* Where cards stick */
+  width: calc(100% - 160px);
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-bottom: 100vh; /* Full viewport height for scroll space */
   background: white;
+  border-radius: 12px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-  box-sizing: border-box;
+  padding: 80px;
+  min-height: 600px;
   
-  /* Use CSS custom properties for transforms */
-  --scale: 1;
-  --translateY: 0px;
-  --rotation: 0deg;
-  --blur: 0;
-  
-  /* Single transform declaration for better performance */
-  transform: 
-    translate3d(0, var(--translateY), 0) 
-    scale(var(--scale)) 
-    rotate(var(--rotation));
-  filter: blur(var(--blur));
-  
-  /* Optimization properties */
-  transform-origin: top center;
+  /* Animation setup */
+  transform-origin: center center;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              filter 0.3s ease;
   will-change: transform, filter;
+  
+  /* 3D rendering */
+  perspective: 1000px;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  perspective: 1000px;
-  -webkit-perspective: 1000px;
-  
-  /* Smooth filter transitions only */
-  transition: filter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  
-  /* Prevent text rendering issues during transform */
-  -webkit-font-smoothing: subpixel-antialiased;
-  
-  /* Layer promotion for better performance */
-  contain: layout style;
 }
 
-/* Remove transitions during scroll for better performance */
-.scroll-stack-scroller:active .scroll-stack-card {
-  transition: none;
+/* Last card needs less bottom margin */
+.scroll-stack-card:last-child {
+  margin-bottom: 50vh;
 }
 
-.scroll-stack-end {
-  width: 100%;
-  height: 1px;
-  pointer-events: none;
-}
+/* Stack order */
+.scroll-stack-card:nth-child(1) { z-index: 10; }
+.scroll-stack-card:nth-child(2) { z-index: 9; }
+.scroll-stack-card:nth-child(3) { z-index: 8; }
+.scroll-stack-card:nth-child(4) { z-index: 7; }
 
-/* Stack card custom styles optimized */
+/* Custom card styles */
 .stack-card-custom {
-  background: #ffffff !important;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08) !important;
-  min-height: 600px !important;
   display: flex !important;
   align-items: center !important;
-  padding: 80px !important;
-  /* Optimize rendering */
-  contain: layout style paint;
+  justify-content: space-between !important;
+  gap: 60px;
 }
 
 .stack-card-sustainability {
   background: linear-gradient(135deg, #056006, #74b086) !important;
-  color: #fff !important;
+  color: white !important;
+  text-align: center;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  min-height: 700px !important;
-  /* Cache gradient rendering */
-  will-change: auto;
-  contain: layout style paint;
 }
 
-/* Content optimization */
-.stack-content,
+/* Content styling */
+.stack-content {
+  display: flex;
+  gap: 60px;
+  align-items: center;
+  width: 100%;
+}
+
+.stack-content.reverse {
+  flex-direction: row-reverse;
+}
+
+.stack-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.stack-title {
+  font-size: 48px;
+  font-weight: 100;
+  color: #056006;
+  margin-bottom: 24px;
+  line-height: 1.2;
+  letter-spacing: -2px;
+}
+
+.stack-description {
+  font-size: 18px;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 40px;
+}
+
+.stack-visual {
+  flex: 0 0 auto;
+  width: 400px;
+  height: 400px;
+  background: linear-gradient(135deg, #e9f1ea, #6ec184);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.stack-visual::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, transparent 30%, #6ec184 100%);
+  opacity: 0.1;
+  animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 36px;
+  font-weight: 100;
+  color: #6ec184;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  display: block;
+}
+
 .sustainability-content {
-  /* Prevent reflow during animations */
-  contain: layout style;
-  will-change: auto;
+  width: 100%;
+  padding: 40px;
 }
 
-/* Optimize stat grids */
-.stats-grid,
+.sustainability-title {
+  font-size: 56px;
+  font-weight: 100;
+  color: white;
+  margin-bottom: 60px;
+  letter-spacing: -2px;
+}
+
 .stats-grid-large {
-  contain: layout style;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 60px;
+  margin-top: 60px;
 }
 
-/* Mobile optimizations */
+.stat-value-large {
+  font-size: 64px;
+  font-weight: 100;
+  color: white;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.stat-label-light {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.8);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  display: block;
+}
+
+/* Mobile responsive */
 @media (max-width: 768px) {
-  .scroll-stack-inner {
-    padding-left: 20px;
-    padding-right: 20px;
-    /* Reduce padding for mobile performance */
-    padding-bottom: 30rem;
+  .scroll-stack-container {
+    padding-top: 50px;
   }
-  
+
   .scroll-stack-card {
-    padding: 40px;
-    margin-bottom: 60px;
-    min-height: 400px;
-    /* Reduce shadow complexity on mobile */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    width: calc(100% - 40px);
+    padding: 40px 30px;
+    margin-bottom: 80vh;
+    min-height: 500px;
   }
-  
-  /* Disable blur on mobile for better performance */
-  .scroll-stack-card {
-    --blur: 0 !important;
-    filter: none !important;
-  }
-}
 
-/* Reduce motion for accessibility and performance */
-@media (prefers-reduced-motion: reduce) {
-  .scroll-stack-card {
-    transition: none !important;
+  .scroll-stack-card:last-child {
+    margin-bottom: 30vh;
   }
-  
-  .scroll-stack-scroller {
-    scroll-behavior: auto !important;
+
+  .stack-content {
+    flex-direction: column !important;
+    gap: 40px;
   }
-}
 
-/* Loading optimization */
-.scroll-stack-card:not([data-loaded]) {
-  opacity: 0;
-  animation: fadeIn 0.3s forwards;
-}
+  .stack-visual {
+    width: 100%;
+    height: 300px;
+  }
 
-@keyframes fadeIn {
-  to {
-    opacity: 1;
+  .stack-title {
+    font-size: 36px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .stats-grid-large {
+    grid-template-columns: 1fr;
+    gap: 40px;
   }
 }
 
-/* GPU acceleration helpers */
-.gpu-accelerated {
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
-  will-change: transform;
-}
-
-/* Performance mode - can be toggled via JS */
-.performance-mode .scroll-stack-card {
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
-  filter: none !important;
-  transition: none !important;
+/* Ensure text stays crisp */
+.scroll-stack-card * {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }

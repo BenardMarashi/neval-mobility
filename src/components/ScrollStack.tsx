@@ -39,12 +39,12 @@ interface ScrollStackProps {
 const ScrollStack: React.FC<ScrollStackProps> = ({
   children,
   className = "",
-  itemDistance = 100,
-  itemScale = 0.03,
-  itemStackDistance = 30,
-  stackPosition = "20%",
-  scaleEndPosition = "10%",
-  baseScale = 0.85,
+  itemDistance = 200,  // Increased from 100 for more space between cards
+  itemScale = 0.02,    // Reduced from 0.03 for subtler scaling
+  itemStackDistance = 40,  // Increased from 30 for more spacing when stacked
+  stackPosition = "50%",   // Changed from 20% - cards start stacking at middle of viewport
+  scaleEndPosition = "30%", // Changed from 10% - more time to see the card
+  baseScale = 0.9,         // Increased from 0.85 for less dramatic scaling
   scaleDuration = 0.5,
   rotationAmount = 0,
   blurAmount = 0,
@@ -63,6 +63,7 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
     scaleEndPositionPx: number;
     endElementTop: number;
     cardTops: number[];
+    cardHeights: number[];
   } | null>(null);
 
   // Parse percentage helper with memoization
@@ -83,31 +84,47 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
     if (!cached) return;
 
     const cardTop = cached.cardTops[index];
+    const cardHeight = cached.cardHeights[index];
+    
+    // Card is fully visible when its bottom edge reaches the stack position
+    const cardBottom = cardTop + cardHeight;
+    const viewportTop = scrollTop;
+    const viewportBottom = scrollTop + cached.containerHeight;
+    
+    // Trigger points adjusted for better visibility
     const triggerStart = cardTop - cached.stackPositionPx - (itemStackDistance * index);
     const triggerEnd = cardTop - cached.scaleEndPositionPx;
+    
+    // Pin points - when card should stick
     const pinStart = triggerStart;
     const pinEnd = cached.endElementTop - cached.containerHeight / 2;
 
-    // Early exit if card is far from viewport
-    const viewportBottom = scrollTop + cached.containerHeight;
-    if (cardTop > viewportBottom + 500 || cardTop < scrollTop - 1000) {
+    // Don't animate cards that are too far from viewport
+    if (cardTop > viewportBottom + 500 || cardBottom < viewportTop - 500) {
       return;
     }
 
-    // Calculate progress
-    const scaleProgress = Math.max(0, Math.min(1, 
-      scrollTop < triggerStart ? 0 : 
-      scrollTop > triggerEnd ? 1 : 
-      (scrollTop - triggerStart) / (triggerEnd - triggerStart)
-    ));
+    // Calculate progress with smoother interpolation
+    let scaleProgress = 0;
+    if (scrollTop >= triggerStart && scrollTop <= triggerEnd) {
+      scaleProgress = (scrollTop - triggerStart) / (triggerEnd - triggerStart);
+      // Ease the progress for smoother animation
+      scaleProgress = Math.pow(scaleProgress, 1.5); // Easing curve
+    } else if (scrollTop > triggerEnd) {
+      scaleProgress = 1;
+    }
 
+    // Calculate scale with less dramatic changes
     const targetScale = baseScale + (index * itemScale);
     const scale = 1 - scaleProgress * (1 - targetScale);
+    
+    // Rotation (optional)
     const rotation = rotationAmount ? index * rotationAmount * scaleProgress : 0;
 
-    // Calculate blur
+    // Calculate blur for depth effect
     let blur = 0;
     if (blurAmount && index > 0) {
+      // Find which card is currently on top
       let topCardIndex = 0;
       for (let j = 0; j < cardsRef.current.length; j++) {
         const jTriggerStart = cached.cardTops[j] - cached.stackPositionPx - (itemStackDistance * j);
@@ -115,24 +132,33 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
           topCardIndex = j;
         }
       }
+      // Only blur cards behind the top card
       if (index < topCardIndex) {
-        blur = Math.max(0, (topCardIndex - index) * blurAmount);
+        blur = Math.min((topCardIndex - index) * blurAmount, blurAmount * 3);
       }
     }
 
-    // Calculate translateY
+    // Calculate translateY for pinning effect
     let translateY = 0;
     if (scrollTop >= pinStart && scrollTop <= pinEnd) {
+      // Pin the card
       translateY = scrollTop - cardTop + cached.stackPositionPx + (itemStackDistance * index);
     } else if (scrollTop > pinEnd) {
+      // Keep pinned at end position
       translateY = pinEnd - cardTop + cached.stackPositionPx + (itemStackDistance * index);
     }
 
-    // Apply transforms using CSS custom properties for better performance
-    card.style.setProperty('--scale', scale.toFixed(3));
-    card.style.setProperty('--translateY', `${translateY.toFixed(1)}px`);
-    card.style.setProperty('--rotation', `${rotation.toFixed(1)}deg`);
-    card.style.setProperty('--blur', blur > 0 ? `${blur.toFixed(1)}px` : '0');
+    // Apply transforms using will-change for better performance
+    card.style.willChange = 'transform, filter';
+    card.style.transform = `translate3d(0, ${translateY}px, 0) scale(${scale}) rotate(${rotation}deg)`;
+    card.style.filter = blur > 0 ? `blur(${blur}px)` : 'none';
+    
+    // Add opacity for cards that are stacked
+    if (scaleProgress > 0.8 && index > 0) {
+      card.style.opacity = '0.95';
+    } else {
+      card.style.opacity = '1';
+    }
 
     // Check if last card is in view for callback
     if (index === cardsRef.current.length - 1) {
@@ -157,17 +183,9 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
         }
 
         const scrollTop = scroller.scrollTop;
-        const scrollDelta = Math.abs(scrollTop - lastScrollTopRef.current);
-        
-        // Skip minor scroll updates
-        if (scrollDelta < 0.5) {
-          ticking.current = false;
-          return;
-        }
-
         lastScrollTopRef.current = scrollTop;
 
-        // Update only visible cards
+        // Update all cards
         cardsRef.current.forEach((card, index) => {
           if (card) {
             updateCardTransform(card, index, scrollTop, cachedDataRef.current);
@@ -180,7 +198,7 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
     }
   }, [updateCardTransform]);
 
-  // Setup cache
+  // Setup cache with card dimensions
   const setupCache = useCallback(() => {
     const scroller = scrollerRef.current;
     if (!scroller) return;
@@ -190,18 +208,21 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
     const scaleEndPositionPx = parsePercentage(scaleEndPosition, containerHeight);
     const endElement = scroller.querySelector('.scroll-stack-end') as HTMLElement;
     const endElementTop = endElement ? endElement.offsetTop : 0;
+    
     const cardTops = cardsRef.current.map(card => card.offsetTop);
+    const cardHeights = cardsRef.current.map(card => card.offsetHeight);
 
     cachedDataRef.current = {
       containerHeight,
       stackPositionPx,
       scaleEndPositionPx,
       endElementTop,
-      cardTops
+      cardTops,
+      cardHeights
     };
   }, [stackPosition, scaleEndPosition, parsePercentage]);
 
-  // Optimized Lenis setup
+  // Optimized Lenis setup with better settings
   const setupLenis = useCallback(() => {
     const scroller = scrollerRef.current;
     if (!scroller) return;
@@ -209,16 +230,16 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
     const lenis = new Lenis({
       wrapper: scroller,
       content: scroller.querySelector('.scroll-stack-inner') as HTMLElement,
-      duration: 1,
+      duration: 1.2,  // Slightly longer for smoother scrolling
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       touchMultiplier: 2,
       infinite: false,
       gestureOrientation: 'vertical',
-      wheelMultiplier: 1,
-      lerp: 0.12,
+      wheelMultiplier: 0.8,  // Slower wheel scrolling for better control
+      lerp: 0.1,  // Smoother lerping
       syncTouch: true,
-      syncTouchLerp: 0.1,
+      syncTouchLerp: 0.08,
     });
 
     lenis.on('scroll', requestUpdate);
@@ -242,27 +263,19 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
     const cards = Array.from(scroller.querySelectorAll("[data-scroll-item]")) as HTMLElement[];
     cardsRef.current = cards;
 
-    // Setup initial CSS with CSS variables
+    // Setup initial CSS
     cards.forEach((card, i) => {
       if (i < cards.length - 1) {
         card.style.marginBottom = `${itemDistance}px`;
       }
       
-      // Set initial CSS custom properties
-      card.style.cssText = `
-        margin-bottom: ${i < cards.length - 1 ? itemDistance : 0}px;
-        will-change: transform;
-        transform-origin: top center;
-        backface-visibility: hidden;
-        transform: translateZ(0) translateY(var(--translateY, 0)) scale(var(--scale, 1)) rotate(var(--rotation, 0deg));
-        filter: blur(var(--blur, 0));
-        transition: filter ${scaleDuration}s cubic-bezier(0.4, 0, 0.2, 1);
-      `;
-      
-      card.style.setProperty('--scale', '1');
-      card.style.setProperty('--translateY', '0px');
-      card.style.setProperty('--rotation', '0deg');
-      card.style.setProperty('--blur', '0');
+      // Set initial styles for better performance
+      card.style.willChange = 'transform, filter, opacity';
+      card.style.transform = 'translate3d(0, 0, 0) scale(1) rotate(0deg)';
+      card.style.transformOrigin = 'top center';
+      card.style.backfaceVisibility = 'hidden';
+      card.style.opacity = '1';
+      card.style.transition = `filter ${scaleDuration}s cubic-bezier(0.4, 0, 0.2, 1), opacity ${scaleDuration}s ease`;
     });
 
     // Setup cache and Lenis
@@ -272,14 +285,19 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
     // Initial update
     requestUpdate();
 
-    // Handle resize
+    // Handle resize with debounce
+    let resizeTimer: NodeJS.Timeout;
     const handleResize = () => {
-      setupCache();
-      requestUpdate();
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        setupCache();
+        requestUpdate();
+      }, 250);
     };
     window.addEventListener('resize', handleResize);
 
     return () => {
+      clearTimeout(resizeTimer);
       window.removeEventListener('resize', handleResize);
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
