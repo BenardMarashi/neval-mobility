@@ -1,51 +1,64 @@
-/* src/components/ScrollStack.css - SIMPLE PAGE SCROLL VERSION */
+/* src/components/ScrollStack.css - PROPER STACKING VERSION */
 
 .scroll-stack-container {
   position: relative;
   width: 100%;
-  /* NO height restriction - uses page scroll */
-  /* NO overflow - uses page scroll */
-  padding-top: 100px; /* Space before first card */
-  background: transparent;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #f5f5f5;
+  
+  /* Smooth scrolling */
+  scroll-behavior: smooth;
+  
+  /* Hide scrollbar */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scroll-stack-container::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll-stack-inner {
+  position: relative;
+  width: 100%;
+  padding: 100px 0;
 }
 
 .scroll-stack-card {
+  
   position: sticky;
-  top: 100px; /* Where cards stick */
-  width: calc(100% - 160px);
+  top: 100px;
+  width: 90%;
   max-width: 1200px;
-  margin: 0 auto;
-  margin-bottom: 100vh; /* Full viewport height for scroll space */
+  margin: 0 auto 400px auto; /* Increased margin for scroll space */
   background: white;
   border-radius: 12px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-  padding: 80px;
-  min-height: 600px;
+  padding: 60px;
+  min-height: 400px;
   
-  /* Animation setup */
-  transform-origin: center center;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              filter 0.3s ease;
-  will-change: transform, filter;
+  /* Fast GPU-accelerated transforms */
+  will-change: transform, opacity, filter;
+  transform: translate(0, 0) scale(1);
+  transform-origin: center top; /* Stack from top */
+  transition: transform 0.3s ease, filter 0.3s ease;
   
-  /* 3D rendering */
-  perspective: 1000px;
-  backface-visibility: hidden;
+  /* Ensure sharp rendering */
   -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  
+  /* Dynamic z-index will be set by JavaScript */
+  /* REMOVED static z-index rules */
 }
 
-/* Last card needs less bottom margin */
-.scroll-stack-card:last-child {
-  margin-bottom: 50vh;
+/* Spacer to create scroll distance */
+.scroll-stack-spacer {
+  height: 50vh;
 }
 
-/* Stack order */
-.scroll-stack-card:nth-child(1) { z-index: 10; }
-.scroll-stack-card:nth-child(2) { z-index: 9; }
-.scroll-stack-card:nth-child(3) { z-index: 8; }
-.scroll-stack-card:nth-child(4) { z-index: 7; }
-
-/* Custom card styles */
+/* Card content styles */
 .stack-card-custom {
   display: flex !important;
   align-items: center !important;
@@ -62,7 +75,6 @@
   justify-content: center !important;
 }
 
-/* Content styling */
 .stack-content {
   display: flex;
   gap: 60px;
@@ -80,25 +92,25 @@
 }
 
 .stack-title {
-  font-size: 48px;
+  font-size: 42px;
   font-weight: 100;
   color: #056006;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   line-height: 1.2;
-  letter-spacing: -2px;
+  letter-spacing: -1px;
 }
 
 .stack-description {
   font-size: 18px;
   color: #666;
   line-height: 1.6;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 
 .stack-visual {
   flex: 0 0 auto;
-  width: 400px;
-  height: 400px;
+  width: 350px;
+  height: 350px;
   background: linear-gradient(135deg, #e9f1ea, #6ec184);
   border-radius: 8px;
   display: flex;
@@ -127,8 +139,8 @@
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
-  margin-top: 40px;
+  gap: 20px;
+  margin-top: 30px;
 }
 
 .stat-item {
@@ -136,15 +148,15 @@
 }
 
 .stat-value {
-  font-size: 36px;
+  font-size: 32px;
   font-weight: 100;
   color: #6ec184;
-  margin-bottom: 8px;
+  margin-bottom: 5px;
   display: block;
 }
 
 .stat-label {
-  font-size: 14px;
+  font-size: 12px;
   color: #999;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -153,85 +165,83 @@
 
 .sustainability-content {
   width: 100%;
-  padding: 40px;
+  padding: 20px;
 }
 
 .sustainability-title {
-  font-size: 56px;
+  font-size: 48px;
   font-weight: 100;
   color: white;
-  margin-bottom: 60px;
-  letter-spacing: -2px;
+  margin-bottom: 40px;
+  letter-spacing: -1px;
 }
 
 .stats-grid-large {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 60px;
-  margin-top: 60px;
+  gap: 40px;
+  margin-top: 40px;
 }
 
 .stat-value-large {
-  font-size: 64px;
+  font-size: 56px;
   font-weight: 100;
   color: white;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   display: block;
 }
 
 .stat-label-light {
-  font-size: 16px;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.8);
   text-transform: uppercase;
   letter-spacing: 0.1em;
   display: block;
 }
 
-/* Mobile responsive */
+/* Mobile */
 @media (max-width: 768px) {
-  .scroll-stack-container {
-    padding-top: 50px;
-  }
-
   .scroll-stack-card {
-    width: calc(100% - 40px);
-    padding: 40px 30px;
-    margin-bottom: 80vh;
-    min-height: 500px;
-  }
-
-  .scroll-stack-card:last-child {
-    margin-bottom: 30vh;
+    width: calc(100% - 30px);
+    padding: 30px;
+    min-height: auto;
+    margin-bottom: 150px;
   }
 
   .stack-content {
     flex-direction: column !important;
-    gap: 40px;
+    gap: 30px;
   }
 
   .stack-visual {
     width: 100%;
-    height: 300px;
+    height: 250px;
   }
 
   .stack-title {
-    font-size: 36px;
+    font-size: 32px;
   }
 
   .stats-grid {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 15px;
   }
 
   .stats-grid-large {
     grid-template-columns: 1fr;
-    gap: 40px;
+    gap: 30px;
   }
 }
 
-/* Ensure text stays crisp */
-.scroll-stack-card * {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
+/* Performance mode */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-stack-card {
+    transition: none !important;
+  }
 }
+
+body.performance-mode .scroll-stack-card {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  will-change: auto;
+}
+
