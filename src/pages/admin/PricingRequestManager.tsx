@@ -1,18 +1,18 @@
 // src/pages/admin/QuotationManager.tsx - REPLACE ENTIRE FILE
 import React, { useState } from 'react';
 import { db, updateDoc, doc } from '../../services/firebase';
-import { Quotation, QuotationStatus } from '../../types/Quotation';
+import { PricingRequest, PricingRequestStatus } from '../../types/PricingRequest';
 import './QuotationManager.css';
 
 interface QuotationManagerProps {
-  quotations: Quotation[];
+  quotations: PricingRequest[];
 }
 
 const QuotationManager: React.FC<QuotationManagerProps> = ({ quotations }) => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [notes, setNotes] = useState<{ [key: string]: string }>({});
 
-  const handleStatusChange = async (quotation: Quotation, newStatus: QuotationStatus) => {
+  const handleStatusChange = async (quotation: PricingRequest, newStatus: PricingRequestStatus) => {
     if (!quotation.id) return;
     
     try {
@@ -26,7 +26,7 @@ const QuotationManager: React.FC<QuotationManagerProps> = ({ quotations }) => {
     }
   };
 
-  const handleNotesUpdate = async (quotation: Quotation) => {
+  const handleNotesUpdate = async (quotation: PricingRequest) => {
     if (!quotation.id) return;
     
     try {
@@ -41,7 +41,7 @@ const QuotationManager: React.FC<QuotationManagerProps> = ({ quotations }) => {
     }
   };
 
-  const getStatusColor = (status: QuotationStatus) => {
+  const getStatusColor = (status: PricingRequestStatus) => {
     switch (status) {
       case 'pending': return '#ff9800';
       case 'contacted': return '#2196f3';
@@ -128,7 +128,7 @@ const QuotationManager: React.FC<QuotationManagerProps> = ({ quotations }) => {
                     <label>Update Status:</label>
                     <select 
                       value={quotation.status}
-                      onChange={(e) => handleStatusChange(quotation, e.target.value as QuotationStatus)}
+                      onChange={(e) => handleStatusChange(quotation, e.target.value as PricingRequestStatus)}
                     >
                       <option value="pending">Pending</option>
                       <option value="contacted">Contacted</option>

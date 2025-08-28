@@ -64,6 +64,33 @@ body {
   text-transform: uppercase;
 }
 
+.logo-img {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  transition: opacity 0.3s ease;
+}
+
+.logo-img:hover {
+  opacity: 0.8;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .logo-img {
+    height: 32px;
+  }
+}
+
+/* High DPI screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .logo-img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
 .nav-links {
   display: flex;
   gap: 48px;

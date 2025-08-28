@@ -1,17 +1,17 @@
-// src/components/BookQuotation.tsx - REPLACE ENTIRE FILE
+// src/components/RequestPricing.tsx (formerly BookQuotation.tsx)
 import React, { useState } from 'react';
 import { db, addDoc, collection, serverTimestamp } from '../services/firebase';
-import { PricingRequest } from '../types/PricingRequest';
-import './BookQuotation.css';
+import { PricingRequest } from '../types/PricingRequest'; // CHANGED
+import './RequestPricing.css'; // CHANGED
 
-interface BookQuotationProps {
+interface RequestPricingProps { // CHANGED
   carId: string;
   carName: string;
 }
 
-const BookQuotation: React.FC<BookQuotationProps> = ({ carId, carName }) => {
+const RequestPricing: React.FC<RequestPricingProps> = ({ carId, carName }) => { // CHANGED
   const [formData, setFormData] = useState({
-    customerName: '',  // CHANGED from 'name' to 'customerName'
+    name: '',
     email: '',
     phone: '',
     preferredDate: '',
@@ -29,7 +29,7 @@ const BookQuotation: React.FC<BookQuotationProps> = ({ carId, carName }) => {
     setError('');
     
     try {
-      const quotationData: Omit<PricingRequest, 'id'> = {
+      const pricingData: Omit<PricingRequest, 'id'> = { // CHANGED
         carId,
         carName,
         ...formData,
@@ -37,12 +37,12 @@ const BookQuotation: React.FC<BookQuotationProps> = ({ carId, carName }) => {
         createdAt: serverTimestamp() as any
       };
       
-      await addDoc(collection(db, 'quotations'), quotationData);
+      await addDoc(collection(db, 'pricingRequests'), pricingData); // CHANGED
       setSuccess(true);
       
       // Reset form
       setFormData({
-        customerName: '',
+        name: '',
         email: '',
         phone: '',
         preferredDate: '',
@@ -51,11 +51,10 @@ const BookQuotation: React.FC<BookQuotationProps> = ({ carId, carName }) => {
         message: ''
       });
       
-      // Hide success message after 5 seconds
       setTimeout(() => setSuccess(false), 5000);
     } catch (err: any) {
-      setError('Failed to submit quotation request. Please try again.');
-      console.error('Error submitting quotation:', err);
+      setError('Failed to submit pricing request. Please try again.'); // CHANGED
+      console.error('Error submitting pricing request:', err); // CHANGED
     } finally {
       setLoading(false);
     }
@@ -69,13 +68,13 @@ const BookQuotation: React.FC<BookQuotationProps> = ({ carId, carName }) => {
   };
 
   return (
-    <section className="book-quotation-form">
-      <h2>Book a Quotation</h2>
-      <p className="form-subtitle">Get a personalized quote for your {carName}</p>
+    <section className="request-pricing-form"> {/* CHANGED */}
+      <h2>Request Pricing</h2> {/* CHANGED */}
+      <p className="form-subtitle">Get personalized pricing for your {carName}</p> {/* CHANGED */}
       
       {success && (
         <div className="success-message">
-          ✓ Your quotation request has been submitted successfully! We'll contact you within 24 hours.
+          ✓ Your pricing request has been submitted successfully! We'll contact you within 24 hours. {/* CHANGED */}
         </div>
       )}
       
@@ -86,12 +85,13 @@ const BookQuotation: React.FC<BookQuotationProps> = ({ carId, carName }) => {
       )}
       
       <form onSubmit={handleSubmit}>
+        {/* Form fields remain the same */}
         <div className="form-row">
           <input
             type="text"
-            name="customerName"  // CHANGED from 'name' to 'customerName'
+            name="name"
             placeholder="Your Name *"
-            value={formData.customerName}
+            value={formData.name}
             onChange={handleChange}
             required
             disabled={loading}
@@ -167,11 +167,11 @@ const BookQuotation: React.FC<BookQuotationProps> = ({ carId, carName }) => {
         />
         
         <button type="submit" className="submit-btn" disabled={loading}>
-          {loading ? 'Submitting...' : `Request Quotation for ${carName}`}
+          {loading ? 'Submitting...' : `Request Pricing for ${carName}`} {/* CHANGED */}
         </button>
       </form>
     </section>
   );
 };
 
-export default BookQuotation;
+export default RequestPricing; // CHANGED

@@ -206,7 +206,14 @@ const AppContent: React.FC = () => {
           {/* Navigation */}
           <nav className="nav-header">
             <div className="nav-content">
-              <div className="logo">NEVAL MOBILITY</div>
+                  <div className="logo">
+                      <img 
+                        src="/logo.jpg" 
+                        alt="Neval Mobility - Next Electric Vehicle Alternative" 
+                        className="logo-img"
+                        loading="eager"
+                      />
+                    </div>
               <ul className="nav-links">
                 <li><a href="#vehicles" onClick={(e) => { e.preventDefault(); scrollToSection('vehicles'); }}>Vehicles</a></li>
                 <li><a href="#technology" onClick={(e) => { e.preventDefault(); scrollToSection('technology'); }}>Technology</a></li>
@@ -214,7 +221,7 @@ const AppContent: React.FC = () => {
                 <li><a href="#sustainability" onClick={(e) => { e.preventDefault(); scrollToSection('sustainability'); }}>Sustainability</a></li>
                 <li><a href="#about" onClick={(e) => { e.preventDefault(); scrollToSection('about'); }}>About</a></li>
               </ul>
-              <button className="nav-cta">Book Quotation</button>
+              <button className="nav-cta">Request Pricing</button>
             </div>
           </nav>
 
@@ -264,7 +271,7 @@ const AppContent: React.FC = () => {
             <div className="hero-content">
               <div className="hero-inner">
                 <h1 className="hero-title">Neval<br/>Mobility</h1>
-                <p className="hero-subtitle">Pure Electric Performance</p>
+                <p className="hero-subtitle">Next Electric Vehicle Alternative</p>
                 <div className="hero-buttons">
                   <button 
                     className="btn-primary"
@@ -276,7 +283,7 @@ const AppContent: React.FC = () => {
                     className="btn-secondary"
                     onClick={() => scrollToSection('quotation')}
                   >
-                    Get Quotation
+                    Request Pricing
                   </button>
                 </div>
               </div>
@@ -355,7 +362,7 @@ const AppContent: React.FC = () => {
                   <h4>Support</h4>
                   <ul>
                     <li><a href="#contact">Contact Us</a></li>
-                    <li><a href="#quotation">Book Quotation</a></li>
+                    <li><a href="#quotation">Request Pricing</a></li>
                     <li><a href="#locations">Locations</a></li>
                   </ul>
                 </div>
@@ -364,7 +371,6 @@ const AppContent: React.FC = () => {
                   <ul>
                     <li><a href="#about">About Us</a></li>
                     <li><a href="#news">News</a></li>
-                    <li><a href="#careers">Careers</a></li>
                   </ul>
                 </div>
               </div>
@@ -372,7 +378,7 @@ const AppContent: React.FC = () => {
               {/* Hidden Admin Section */}
               <div className="footer-bottom">
                 <div className="footer-copyright">
-                  <p>&copy; 2024 Neval Mobility. All rights reserved.</p>
+                  <p>&copy; 2025 Neval Mobility. All rights reserved.</p>
                 </div>
                 <div className="admin-trigger">
                   {isAdmin ? (

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signOutAdmin, db, collection, onSnapshot, deleteDoc, doc, updateDoc } from '../../services/firebase';
 import { Car } from '../../types/Car';
-import { Quotation } from '../../types/Quotation';
+import { PricingRequest } from '../../types/PricingRequest';
 import CarManager from './CarManager';
 import QuotationManager from './QuotationManager';
 import './AdminDashboard.css';
@@ -13,7 +13,7 @@ type TabType = 'cars' | 'quotations';
 const AdminDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('cars');
   const [cars, setCars] = useState<Car[]>([]);
-  const [quotations, setQuotations] = useState<Quotation[]>([]);
+  const [quotations, setQuotations] = useState<PricingRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -36,9 +36,9 @@ const AdminDashboard: React.FC = () => {
     const quotationsUnsubscribe = onSnapshot(
       collection(db, 'quotations'),
       (snapshot) => {
-        const quotationsData: Quotation[] = [];
+        const quotationsData: PricingRequest[] = [];
         snapshot.forEach((doc) => {
-          quotationsData.push({ id: doc.id, ...doc.data() } as Quotation);
+          quotationsData.push({ id: doc.id, ...doc.data() } as PricingRequest);
         });
         // Sort by newest first
         setQuotations(quotationsData.sort((a, b) => {
