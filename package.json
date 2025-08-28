@@ -12,6 +12,7 @@
     "@types/react": "^19.1.11",
     "@types/react-dom": "^19.1.7",
     "@types/react-router-dom": "^5.3.3",
+    "firebase": "^12.1.0",
     "framer-motion": "^11.0.0",
     "lenis": "^1.0.45",
     "lucide-react": "^0.541.0",

@@ -1,0 +1,25 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Cars: Public read, admin write
+    match /cars/{carId} {
+      allow read: if true;
+      allow write: if request.auth != null && 
+        exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
+    }
+    
+    // Quotations: Public create, admin full access
+    match /quotations/{quotationId} {
+      allow create: if true;
+      allow read, update, delete: if request.auth != null && 
+        exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
+    }
+    
+    // Admins: Only readable by the admin themselves
+    match /admins/{adminEmail} {
+      allow read: if request.auth != null && 
+        request.auth.token.email == adminEmail;
+      allow write: if false;
+    }
+  }
+}
