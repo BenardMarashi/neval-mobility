@@ -1,7 +1,7 @@
-// src/pages/admin/CarManager.tsx
+// src/pages/admin/CarManager.tsx - COMPLETE UPDATED FILE
 import React, { useState } from 'react';
 import { db, addDoc, collection, updateDoc, doc, serverTimestamp } from '../../services/firebase';
-import { Car } from '../../types/Car';
+import { Car, CarCategory, CAR_CATEGORIES, CATEGORY_LABELS } from '../../types/Car';
 import './CarManager.css';
 
 interface CarManagerProps {
@@ -16,6 +16,7 @@ const CarManager: React.FC<CarManagerProps> = ({ cars, onDelete, onToggleActive 
   const [formData, setFormData] = useState<Partial<Car>>({
     name: '',
     type: '',
+    category: 'ocean network' as CarCategory,
     price: '',
     range: '',
     acceleration: '',
@@ -26,7 +27,8 @@ const CarManager: React.FC<CarManagerProps> = ({ cars, onDelete, onToggleActive 
     description: '',
     features: [],
     images: [],
-    isActive: true
+    isActive: true,
+    published: true
   });
   const [featureInput, setFeatureInput] = useState('');
   const [imageInput, setImageInput] = useState('');
@@ -35,6 +37,7 @@ const CarManager: React.FC<CarManagerProps> = ({ cars, onDelete, onToggleActive 
     setFormData({
       name: '',
       type: '',
+      category: 'ocean network' as CarCategory,
       price: '',
       range: '',
       acceleration: '',
@@ -45,7 +48,8 @@ const CarManager: React.FC<CarManagerProps> = ({ cars, onDelete, onToggleActive 
       description: '',
       features: [],
       images: [],
-      isActive: true
+      isActive: true,
+      published: true
     });
     setFeatureInput('');
     setImageInput('');
@@ -145,6 +149,7 @@ const CarManager: React.FC<CarManagerProps> = ({ cars, onDelete, onToggleActive 
             </div>
             
             <div className="car-card-details">
+              <p><strong>Category:</strong> {car.category ? CATEGORY_LABELS[car.category] : 'Uncategorized'}</p>
               <p><strong>Type:</strong> {car.type}</p>
               <p><strong>Price:</strong> {car.price}</p>
               <p><strong>Range:</strong> {car.range}</p>
@@ -188,6 +193,19 @@ const CarManager: React.FC<CarManagerProps> = ({ cars, onDelete, onToggleActive 
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     required
                   />
+                </div>
+                
+                <div className="form-group">
+                  <label>Category*</label>
+                  <select
+                    value={formData.category}
+                    onChange={(e) => setFormData({ ...formData, category: e.target.value as CarCategory })}
+                    required
+                  >
+                    {CAR_CATEGORIES.map(cat => (
+                      <option key={cat} value={cat}>{CATEGORY_LABELS[cat]}</option>
+                    ))}
+                  </select>
                 </div>
                 
                 <div className="form-group">
@@ -278,6 +296,17 @@ const CarManager: React.FC<CarManagerProps> = ({ cars, onDelete, onToggleActive 
                     required
                   />
                 </div>
+                
+                <div className="form-group">
+                  <label>Published</label>
+                  <select
+                    value={formData.published ? 'true' : 'false'}
+                    onChange={(e) => setFormData({ ...formData, published: e.target.value === 'true' })}
+                  >
+                    <option value="true">Published</option>
+                    <option value="false">Draft</option>
+                  </select>
+                </div>
               </div>
               
               <div className="form-group">
@@ -325,12 +354,15 @@ const CarManager: React.FC<CarManagerProps> = ({ cars, onDelete, onToggleActive 
                   <button type="button" onClick={handleAddImage}>Add</button>
                 </div>
                 <div className="image-list">
-                  {formData.images?.map((image, index) => (
-                    <div key={index} className="image-item">
-                      <span>{image}</span>
-                      <button type="button" onClick={() => handleRemoveImage(index)}>Remove</button>
-                    </div>
-                  ))}
+                  {formData.images?.map((image, index) => {
+                    const imageUrl = typeof image === 'string' ? image : image.url;
+                    return (
+                      <div key={index} className="image-item">
+                        <span>{imageUrl}</span>
+                        <button type="button" onClick={() => handleRemoveImage(index)}>Remove</button>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
               

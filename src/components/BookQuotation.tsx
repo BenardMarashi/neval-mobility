@@ -1,4 +1,4 @@
-// src/components/BookQuotation.tsx
+// src/components/BookQuotation.tsx - REPLACE ENTIRE FILE
 import React, { useState } from 'react';
 import { db, addDoc, collection, serverTimestamp } from '../services/firebase';
 import { Quotation } from '../types/Quotation';
@@ -11,7 +11,7 @@ interface BookQuotationProps {
 
 const BookQuotation: React.FC<BookQuotationProps> = ({ carId, carName }) => {
   const [formData, setFormData] = useState({
-    name: '',
+    customerName: '',  // CHANGED from 'name' to 'customerName'
     email: '',
     phone: '',
     preferredDate: '',
@@ -42,7 +42,7 @@ const BookQuotation: React.FC<BookQuotationProps> = ({ carId, carName }) => {
       
       // Reset form
       setFormData({
-        name: '',
+        customerName: '',
         email: '',
         phone: '',
         preferredDate: '',
@@ -89,9 +89,9 @@ const BookQuotation: React.FC<BookQuotationProps> = ({ carId, carName }) => {
         <div className="form-row">
           <input
             type="text"
-            name="name"
+            name="customerName"  // CHANGED from 'name' to 'customerName'
             placeholder="Your Name *"
-            value={formData.name}
+            value={formData.customerName}
             onChange={handleChange}
             required
             disabled={loading}

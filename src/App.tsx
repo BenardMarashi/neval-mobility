@@ -1,17 +1,18 @@
-// src/App.tsx - FIXED VERSION
+// src/App.tsx - WITH CATEGORIES
 import React, { useState, useEffect, Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useSearchParams } from 'react-router-dom';
 import './App.css';
 import Hyperspeed from './components/HyperSpeed';
 import Carousel from './components/Carousel';
-import ScrollStack, { ScrollStackItem } from './components/ScrollStack';
+import AnimatedFeatures from './components/AnimatedFeatures';
+import CategoryFilter from './components/CategoryFilter';
 import CarDetail from './pages/CarDetail';
-import { Car, Zap, Battery, Gauge } from 'lucide-react';
+import { Car } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AdminLogin from './components/AdminLogin';
 import ProtectedRoute from './components/ProtectedRoute';
 import { db, collection, getDocs, query, where, signOutAdmin } from './services/firebase';
-import { Car as CarType } from './types/Car';
+import { Car as CarType, CarCategory } from './types/Car';
 
 // Lazy load admin dashboard
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
@@ -24,6 +25,7 @@ const DEFAULT_VEHICLES = [
     description: "Premium electric sedan. 700km range. From $65,000",
     link: "/car/seal",
     icon: <Car className="h-4 w-4 text-white" />,
+    category: 'ocean network' as CarCategory
   },
   {
     id: 'atto3',
@@ -31,6 +33,7 @@ const DEFAULT_VEHICLES = [
     description: "Compact SUV. 420km range. From $48,000",
     link: "/car/atto3",
     icon: <Car className="h-4 w-4 text-white" />,
+    category: 'dynasty network' as CarCategory
   },
   {
     id: 'tang',
@@ -38,6 +41,7 @@ const DEFAULT_VEHICLES = [
     description: "7-seater SUV. 500km range. From $72,000",
     link: "/car/tang",
     icon: <Car className="h-4 w-4 text-white" />,
+    category: 'dynasty network' as CarCategory
   },
   {
     id: 'dolphin',
@@ -45,6 +49,7 @@ const DEFAULT_VEHICLES = [
     description: "City car. 405km range. From $35,000",
     link: "/car/dolphin",
     icon: <Car className="h-4 w-4 text-white" />,
+    category: 'ocean network' as CarCategory
   },
   {
     id: 'han',
@@ -52,14 +57,28 @@ const DEFAULT_VEHICLES = [
     description: "Executive sedan. 605km range. From $78,000",
     link: "/car/han",
     icon: <Car className="h-4 w-4 text-white" />,
+    category: 'dynasty network' as CarCategory
   },
 ];
 
 const AppContent: React.FC = () => {
-  const [vehicles, setVehicles] = useState<any[]>(DEFAULT_VEHICLES); // Start with defaults
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [vehicles, setVehicles] = useState<any[]>(DEFAULT_VEHICLES);
+  const [allVehicles, setAllVehicles] = useState<any[]>(DEFAULT_VEHICLES);
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [loading, setLoading] = useState(true);
   const [firebaseConnected, setFirebaseConnected] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<CarCategory | 'all'>(
+    (searchParams.get('category') as CarCategory | 'all') || 'all'
+  );
+  const [categoryCounts, setCategoryCounts] = useState<Record<CarCategory | 'all', number>>({
+    'all': 0,
+    'ocean network': 0,
+    'dynasty network': 0,
+    'denza': 0,
+    'leopard': 0
+  });
+  
   const { isAdmin } = useAuth();
   const navigate = useNavigate();
 
@@ -76,17 +95,18 @@ const AppContent: React.FC = () => {
           return;
         }
 
-        const carsQuery = query(
+        // Get all active cars
+        const allCarsQuery = query(
           collection(db, 'cars'),
           where('isActive', '==', true)
         );
         
-        const snapshot = await getDocs(carsQuery);
-        console.log(`Found ${snapshot.size} cars in Firestore`);
+        const snapshot = await getDocs(allCarsQuery);
+        console.log(`Found ${snapshot.size} total cars in Firestore`);
         
         if (snapshot.empty) {
           console.log('No cars in Firestore, using defaults');
-          setVehicles(DEFAULT_VEHICLES);
+          setAllVehicles(DEFAULT_VEHICLES);
         } else {
           const carsData = snapshot.docs.map(doc => {
             const data = doc.data() as CarType;
@@ -95,14 +115,34 @@ const AppContent: React.FC = () => {
               title: data.name || 'Unnamed Car',
               description: `${data.type || 'Electric Vehicle'}. ${data.range || 'N/A'} range. From ${data.price || 'Contact Us'}`,
               link: `/car/${doc.id}`,
-              icon: <Car className="h-4 w-4 text-white" />
+              icon: <Car className="h-4 w-4 text-white" />,
+              category: data.category || 'ocean network' as CarCategory
             };
           });
           
           console.log('Cars loaded from Firestore:', carsData);
-          setVehicles(carsData);
+          setAllVehicles(carsData);
           setFirebaseConnected(true);
         }
+        
+        // Calculate category counts
+        const counts: Record<CarCategory | 'all', number> = {
+          'all': 0,
+          'ocean network': 0,
+          'dynasty network': 0,
+          'denza': 0,
+          'leopard': 0
+        };
+        
+        snapshot.forEach(doc => {
+          const data = doc.data() as CarType;
+          counts['all']++;
+          if (data.category) {
+            counts[data.category]++;
+          }
+        });
+        
+        setCategoryCounts(counts);
       } catch (error: any) {
         console.error('Error fetching cars:', error);
         
@@ -114,7 +154,7 @@ const AppContent: React.FC = () => {
         }
         
         // Keep default vehicles on error
-        setVehicles(DEFAULT_VEHICLES);
+        setAllVehicles(DEFAULT_VEHICLES);
       } finally {
         setLoading(false);
       }
@@ -122,6 +162,26 @@ const AppContent: React.FC = () => {
     
     fetchCars();
   }, []);
+
+  // Filter vehicles based on selected category
+  useEffect(() => {
+    if (selectedCategory === 'all') {
+      setVehicles(allVehicles);
+    } else {
+      const filtered = allVehicles.filter(v => v.category === selectedCategory);
+      setVehicles(filtered);
+    }
+  }, [selectedCategory, allVehicles]);
+
+  const handleCategoryChange = (category: CarCategory | 'all') => {
+    setSelectedCategory(category);
+    if (category === 'all') {
+      searchParams.delete('category');
+    } else {
+      searchParams.set('category', category);
+    }
+    setSearchParams(searchParams);
+  };
 
   const handleSignOut = async () => {
     try {
@@ -223,16 +283,25 @@ const AppContent: React.FC = () => {
             </div>
           </section>
 
-          {/* Vehicle Carousel Section */}
+          {/* Vehicle Carousel Section with Categories */}
           <section id="vehicles" className="vehicle-section">
             <div className="section-header">
               <h2 className="section-title">Our Fleet</h2>
               <p className="section-subtitle">
                 {vehicles.length > 0 
-                  ? `${vehicles.length} models. Zero emissions.` 
-                  : 'Loading vehicles...'}
+                  ? `${vehicles.length} ${selectedCategory === 'all' ? 'models' : selectedCategory}. Zero emissions.` 
+                  : selectedCategory !== 'all' 
+                    ? 'No vehicles in this category' 
+                    : 'Loading vehicles...'}
               </p>
             </div>
+            
+            {/* Category Filter */}
+            <CategoryFilter 
+              selectedCategory={selectedCategory}
+              onCategoryChange={handleCategoryChange}
+              counts={categoryCounts}
+            />
             
             {/* Only render Carousel if we have vehicles */}
             {vehicles && vehicles.length > 0 ? (
@@ -249,122 +318,16 @@ const AppContent: React.FC = () => {
               </div>
             ) : (
               <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
-                {loading ? 'Loading vehicles...' : 'No vehicles available at this time.'}
+                {loading ? 'Loading vehicles...' : 
+                 selectedCategory !== 'all' ? 
+                 'No vehicles available in this category.' : 
+                 'No vehicles available at this time.'}
               </div>
             )}
           </section>
 
-          {/* Technology & Features with ScrollStack */}
-          <section id="technology" className="features-section">
-            <ScrollStack className="stack-wrapper">
-              <ScrollStackItem itemClassName="stack-card-custom">
-                <div className="stack-content">
-                  <div className="stack-text">
-                    <h3 className="stack-title">Blade Battery Technology</h3>
-                    <p className="stack-description">
-                      Revolutionary LFP battery technology delivering unmatched safety, 
-                      longevity, and performance. Over 1 million kilometers lifespan.
-                    </p>
-                    <div className="stats-grid">
-                      <div className="stat-item">
-                        <div className="stat-value">1M+</div>
-                        <div className="stat-label">km lifespan</div>
-                      </div>
-                      <div className="stat-item">
-                        <div className="stat-value">800V</div>
-                        <div className="stat-label">architecture</div>
-                      </div>
-                      <div className="stat-item">
-                        <div className="stat-value">18min</div>
-                        <div className="stat-label">10-80% charge</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="stack-visual">
-                    <Battery size={120} color="#6ec184" />
-                  </div>
-                </div>
-              </ScrollStackItem>
-
-              <ScrollStackItem itemClassName="stack-card-custom">
-                <div className="stack-content reverse">
-                  <div className="stack-visual">
-                    <Gauge size={120} color="#6ec184" />
-                  </div>
-                  <div className="stack-text">
-                    <h3 className="stack-title">Intelligent Driving</h3>
-                    <p className="stack-description">
-                      Advanced ADAS with 33 sensors providing 360° perception. 
-                      Highway pilot and intelligent parking assistance.
-                    </p>
-                    <div className="stats-grid">
-                      <div className="stat-item">
-                        <div className="stat-value">33</div>
-                        <div className="stat-label">Sensors</div>
-                      </div>
-                      <div className="stat-item">
-                        <div className="stat-value">360°</div>
-                        <div className="stat-label">Coverage</div>
-                      </div>
-                      <div className="stat-item">
-                        <div className="stat-value">L2+</div>
-                        <div className="stat-label">Autonomy</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </ScrollStackItem>
-
-              <ScrollStackItem itemClassName="stack-card-custom">
-                <div className="stack-content">
-                  <div className="stack-text">
-                    <h3 className="stack-title">Charging Network</h3>
-                    <p className="stack-description">
-                      Access to over 15,000 charging points across the country. 
-                      Fast, reliable, and powered by renewable energy.
-                    </p>
-                    <div className="stats-grid">
-                      <div className="stat-item">
-                        <div className="stat-value">15K+</div>
-                        <div className="stat-label">Charging Points</div>
-                      </div>
-                      <div className="stat-item">
-                        <div className="stat-value">350kW</div>
-                        <div className="stat-label">Max Power</div>
-                      </div>
-                      <div className="stat-item">
-                        <div className="stat-value">24/7</div>
-                        <div className="stat-label">Availability</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="stack-visual">
-                    <Zap size={120} color="#6ec184" />
-                  </div>
-                </div>
-              </ScrollStackItem>
-
-              <ScrollStackItem itemClassName="stack-card-sustainability">
-                <div className="sustainability-content">
-                  <h3 className="sustainability-title">Every Kilometer Matters</h3>
-                  <div className="stats-grid-large">
-                    <div className="stat-item">
-                      <div className="stat-value-large">0</div>
-                      <div className="stat-label-light">Direct Emissions</div>
-                    </div>
-                    <div className="stat-item">
-                      <div className="stat-value-large">96%</div>
-                      <div className="stat-label-light">Recyclable</div>
-                    </div>
-                    <div className="stat-item">
-                      <div className="stat-value-large">-50%</div>
-                      <div className="stat-label-light">Carbon vs ICE</div>
-                    </div>
-                  </div>
-                </div>
-              </ScrollStackItem>
-            </ScrollStack>
-          </section>
+          {/* Technology & Features with Animated Cards */}
+          <AnimatedFeatures />
 
           {/* Footer with Hidden Admin Access */}
           <footer className="footer">
@@ -373,7 +336,7 @@ const AppContent: React.FC = () => {
                 <div className="footer-column">
                   <h4>Vehicles</h4>
                   <ul>
-                    {vehicles.map(vehicle => (
+                    {allVehicles.map(vehicle => (
                       <li key={vehicle.id}>
                         <Link to={vehicle.link}>{vehicle.title}</Link>
                       </li>

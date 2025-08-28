@@ -1,0 +1,244 @@
+/* src/components/AnimatedFeatures.css - NEW FILE */
+.animated-features-section {
+  padding: 120px 48px;
+  background: var(--gray-light);
+  position: relative;
+  overflow: hidden;
+}
+
+.features-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.features-header {
+  text-align: center;
+  margin-bottom: 80px;
+}
+
+.features-title {
+  font-size: clamp(48px, 6vw, 72px);
+  font-weight: 100;
+  color: var(--black);
+  margin-bottom: 16px;
+  letter-spacing: -2px;
+}
+
+.features-subtitle {
+  font-size: 24px;
+  color: #666;
+  font-weight: 300;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 40px;
+  margin-bottom: 80px;
+}
+
+.feature-card {
+  background: white;
+  padding: 48px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.feature-card:hover::before {
+  transform: scaleX(1);
+}
+
+.feature-icon {
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background: var(--surface);
+  border-radius: 16px;
+}
+
+.feature-title {
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--black);
+  margin-bottom: 16px;
+  letter-spacing: -0.5px;
+}
+
+.feature-description {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+.feature-stats {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 24px;
+  border-top: 1px solid #eee;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 100;
+  margin-bottom: 8px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Sustainability Section */
+.sustainability-section {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  padding: 80px;
+  border-radius: 24px;
+  color: white;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.sustainability-section::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  animation: rotate 30s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.sustainability-content {
+  position: relative;
+  z-index: 1;
+}
+
+.sustainability-title {
+  font-size: clamp(48px, 6vw, 64px);
+  font-weight: 100;
+  margin-bottom: 64px;
+  letter-spacing: -2px;
+}
+
+.sustainability-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 48px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.sustainability-stat {
+  position: relative;
+}
+
+.sustainability-value {
+  font-size: clamp(48px, 6vw, 72px);
+  font-weight: 100;
+  margin-bottom: 12px;
+}
+
+.sustainability-label {
+  font-size: 16px;
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .animated-features-section {
+    padding: 80px 24px;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .feature-card {
+    padding: 32px;
+  }
+
+  .sustainability-section {
+    padding: 48px 32px;
+    border-radius: 16px;
+  }
+
+  .sustainability-stats {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+/* Scroll hint animation */
+.animated-features-section::after {
+  content: '';
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 50px;
+  border: 2px solid var(--primary);
+  border-radius: 15px;
+  opacity: 0.5;
+}
+
+.animated-features-section::before {
+  content: '';
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 10px;
+  background: var(--primary);
+  border-radius: 2px;
+  animation: scroll-hint 2s infinite;
+}
+
+@keyframes scroll-hint {
+  0% {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-50%) translateY(20px);
+    opacity: 0;
+  }
+}

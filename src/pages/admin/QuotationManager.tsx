@@ -1,4 +1,4 @@
-// src/pages/admin/QuotationManager.tsx
+// src/pages/admin/QuotationManager.tsx - REPLACE ENTIRE FILE
 import React, { useState } from 'react';
 import { db, updateDoc, doc } from '../../services/firebase';
 import { Quotation, QuotationStatus } from '../../types/Quotation';
@@ -78,7 +78,7 @@ const QuotationManager: React.FC<QuotationManagerProps> = ({ quotations }) => {
               onClick={() => setExpandedId(expandedId === quotation.id ? null : quotation.id)}
             >
               <div className="quotation-info">
-                <h3>{quotation.name}</h3>
+                <h3>{quotation.customerName}</h3>  {/* FIXED: Using customerName */}
                 <p>{quotation.carName} • {formatDate(quotation.createdAt)}</p>
               </div>
               <div className="quotation-status">
@@ -104,15 +104,15 @@ const QuotationManager: React.FC<QuotationManagerProps> = ({ quotations }) => {
                   </div>
                   <div className="detail-item">
                     <label>Preferred Date:</label>
-                    <span>{quotation.preferredDate}</span>
+                    <span>{quotation.preferredDate || 'Not specified'}</span>
                   </div>
                   <div className="detail-item">
                     <label>Preferred Time:</label>
-                    <span>{quotation.preferredTime}</span>
+                    <span>{quotation.preferredTime || 'Not specified'}</span>
                   </div>
                   <div className="detail-item">
                     <label>Location:</label>
-                    <span>{quotation.location}</span>
+                    <span>{quotation.location || 'Not specified'}</span>
                   </div>
                 </div>
 

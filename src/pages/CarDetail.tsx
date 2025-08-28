@@ -1,8 +1,8 @@
-// Update src/pages/CarDetail.tsx
+// src/pages/CarDetail.tsx - COMPLETE UPDATED VERSION
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { db, doc, getDoc } from '../services/firebase';
-import { Car } from '../types/Car';
+import { Car, CATEGORY_LABELS, normalizeCarImages } from '../types/Car';
 import BookQuotation from '../components/BookQuotation';
 import './CarDetail.css';
 
@@ -10,6 +10,7 @@ const CarDetail: React.FC = () => {
   const { carId } = useParams<{ carId: string }>();
   const [car, setCar] = useState<Car | null>(null);
   const [loading, setLoading] = useState(true);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   useEffect(() => {
     const fetchCar = async () => {
@@ -46,25 +47,71 @@ const CarDetail: React.FC = () => {
     );
   }
 
+  // Normalize images to handle both string and CarImage types
+  const images = car.images ? normalizeCarImages(car.images) : [];
+  const currentImage = images[selectedImageIndex]?.url || '/placeholder-car.jpg';
+
   return (
     <div className="car-detail-page">
       <nav className="detail-nav">
         <Link to="/" className="back-link">← Back to Fleet</Link>
       </nav>
 
-      <section className="car-hero">
-        <div className="car-hero-content">
-          <h1>{car.name}</h1>
-          <p className="car-type">{car.type}</p>
-          <p className="car-price">Starting from {car.price}</p>
+      {/* Hero Section with Name and Description */}
+      <section className="car-hero-section">
+        <div className="car-header">
+          <div className="car-info">
+            <h1 className="car-name">{car.name}</h1>
+            {car.category && (
+              <span className="category-badge">
+                {CATEGORY_LABELS[car.category]}
+              </span>
+            )}
+            <p className="car-description">{car.description}</p>
+            <div className="car-meta">
+              <span className="car-type">{car.type}</span>
+              <span className="car-price">Starting from {car.price}</span>
+            </div>
+          </div>
         </div>
-        <div className="car-hero-image">
-          {car.images && car.images[0] && (
-            <img src={car.images[0]} alt={car.name} />
+
+        {/* Image Gallery */}
+        <div className="image-gallery">
+          <div className="main-image">
+            <img 
+              src={currentImage} 
+              alt={`${car.name} - View ${selectedImageIndex + 1}`}
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = '/placeholder-car.jpg';
+              }}
+            />
+          </div>
+          
+          {images.length > 1 && (
+            <div className="thumbnail-strip">
+              <div className="thumbnails-container">
+                {images.map((img, index) => (
+                  <div
+                    key={index}
+                    className={`thumbnail ${index === selectedImageIndex ? 'active' : ''}`}
+                    onClick={() => setSelectedImageIndex(index)}
+                  >
+                    <img 
+                      src={img.url} 
+                      alt={`${car.name} thumbnail ${index + 1}`}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = '/placeholder-car.jpg';
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
         </div>
       </section>
 
+      {/* Specifications Grid */}
       <section className="car-specs">
         <h2>Specifications</h2>
         <div className="specs-grid">
@@ -95,16 +142,19 @@ const CarDetail: React.FC = () => {
         </div>
       </section>
 
-      <section className="car-features">
-        <h2>Key Features</h2>
-        <ul className="features-list">
-          {car.features?.map((feature, index) => (
-            <li key={index}>{feature}</li>
-          ))}
-        </ul>
-      </section>
+      {/* Features List */}
+      {car.features && car.features.length > 0 && (
+        <section className="car-features">
+          <h2>Key Features</h2>
+          <ul className="features-list">
+            {car.features.map((feature, index) => (
+              <li key={index}>{feature}</li>
+            ))}
+          </ul>
+        </section>
+      )}
 
-      {/* Replace test drive form with BookQuotation */}
+      {/* Book Quotation Form */}
       <BookQuotation carId={car.id || ''} carName={car.name} />
     </div>
   );
