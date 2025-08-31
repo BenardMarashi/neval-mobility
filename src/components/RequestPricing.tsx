@@ -1,17 +1,17 @@
-// src/components/RequestPricing.tsx (formerly BookQuotation.tsx)
+// src/components/RequestPricing.tsx
 import React, { useState } from 'react';
 import { db, addDoc, collection, serverTimestamp } from '../services/firebase';
-import { PricingRequest } from '../types/PricingRequest'; // CHANGED
-import './RequestPricing.css'; // CHANGED
+import { PricingRequest } from '../types/PricingRequest';
+import './RequestPricing.css';
 
-interface RequestPricingProps { // CHANGED
+interface RequestPricingProps {
   carId: string;
   carName: string;
 }
 
-const RequestPricing: React.FC<RequestPricingProps> = ({ carId, carName }) => { // CHANGED
+const RequestPricing: React.FC<RequestPricingProps> = ({ carId, carName }) => {
   const [formData, setFormData] = useState({
-    name: '',
+    customerName: '',
     email: '',
     phone: '',
     preferredDate: '',
@@ -29,7 +29,7 @@ const RequestPricing: React.FC<RequestPricingProps> = ({ carId, carName }) => { 
     setError('');
     
     try {
-      const pricingData: Omit<PricingRequest, 'id'> = { // CHANGED
+      const pricingData: Omit<PricingRequest, 'id'> = {
         carId,
         carName,
         ...formData,
@@ -37,12 +37,12 @@ const RequestPricing: React.FC<RequestPricingProps> = ({ carId, carName }) => { 
         createdAt: serverTimestamp() as any
       };
       
-      await addDoc(collection(db, 'pricingRequests'), pricingData); // CHANGED
+      await addDoc(collection(db, 'pricingRequests'), pricingData);
       setSuccess(true);
       
       // Reset form
       setFormData({
-        name: '',
+        customerName: '',
         email: '',
         phone: '',
         preferredDate: '',
@@ -53,8 +53,8 @@ const RequestPricing: React.FC<RequestPricingProps> = ({ carId, carName }) => { 
       
       setTimeout(() => setSuccess(false), 5000);
     } catch (err: any) {
-      setError('Failed to submit pricing request. Please try again.'); // CHANGED
-      console.error('Error submitting pricing request:', err); // CHANGED
+      setError('Failed to submit pricing request. Please try again.');
+      console.error('Error submitting pricing request:', err);
     } finally {
       setLoading(false);
     }
@@ -68,13 +68,13 @@ const RequestPricing: React.FC<RequestPricingProps> = ({ carId, carName }) => { 
   };
 
   return (
-    <section className="request-pricing-form"> {/* CHANGED */}
-      <h2>Request Pricing</h2> {/* CHANGED */}
-      <p className="form-subtitle">Get personalized pricing for your {carName}</p> {/* CHANGED */}
+    <section className="request-pricing-form">
+      <h2>Request Pricing</h2>
+      <p className="form-subtitle">Get personalized pricing for your {carName}</p>
       
       {success && (
         <div className="success-message">
-          ✓ Your pricing request has been submitted successfully! We'll contact you within 24 hours. {/* CHANGED */}
+          ✓ Your pricing request has been submitted successfully! We'll contact you within 24 hours.
         </div>
       )}
       
@@ -85,13 +85,12 @@ const RequestPricing: React.FC<RequestPricingProps> = ({ carId, carName }) => { 
       )}
       
       <form onSubmit={handleSubmit}>
-        {/* Form fields remain the same */}
         <div className="form-row">
           <input
             type="text"
-            name="name"
+            name="customerName"
             placeholder="Your Name *"
-            value={formData.name}
+            value={formData.customerName}
             onChange={handleChange}
             required
             disabled={loading}
@@ -167,11 +166,11 @@ const RequestPricing: React.FC<RequestPricingProps> = ({ carId, carName }) => { 
         />
         
         <button type="submit" className="submit-btn" disabled={loading}>
-          {loading ? 'Submitting...' : `Request Pricing for ${carName}`} {/* CHANGED */}
+          {loading ? 'Submitting...' : `Request Pricing for ${carName}`}
         </button>
       </form>
     </section>
   );
 };
 
-export default RequestPricing; // CHANGED
+export default RequestPricing;

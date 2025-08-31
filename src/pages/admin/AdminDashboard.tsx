@@ -1,24 +1,24 @@
 // src/pages/admin/AdminDashboard.tsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signOutAdmin, db, collection, onSnapshot, deleteDoc, doc, updateDoc } from '../../services/firebase';
+import { signOutAdmin, db, collection, onSnapshot, deleteDoc, doc, updateDoc, serverTimestamp } from '../../services/firebase';
 import { Car } from '../../types/Car';
 import { PricingRequest } from '../../types/PricingRequest';
 import CarManager from './CarManager';
-import QuotationManager from './QuotationManager';
+import PricingRequestManager from './PricingRequestManager';
 import './AdminDashboard.css';
 
-type TabType = 'cars' | 'quotations';
+type TabType = 'cars' | 'pricingRequests';
 
 const AdminDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('cars');
   const [cars, setCars] = useState<Car[]>([]);
-  const [quotations, setQuotations] = useState<PricingRequest[]>([]);
+  const [pricingRequests, setPricingRequests] = useState<PricingRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // ULTRA-THINK: Set up real-time listeners
+    // Set up real-time listeners
     const carsUnsubscribe = onSnapshot(
       collection(db, 'cars'),
       (snapshot) => {
@@ -33,15 +33,15 @@ const AdminDashboard: React.FC = () => {
       }
     );
 
-    const quotationsUnsubscribe = onSnapshot(
-      collection(db, 'quotations'),
+    const pricingUnsubscribe = onSnapshot(
+      collection(db, 'pricingRequests'),
       (snapshot) => {
-        const quotationsData: PricingRequest[] = [];
+        const requestsData: PricingRequest[] = [];
         snapshot.forEach((doc) => {
-          quotationsData.push({ id: doc.id, ...doc.data() } as PricingRequest);
+          requestsData.push({ id: doc.id, ...doc.data() } as PricingRequest);
         });
         // Sort by newest first
-        setQuotations(quotationsData.sort((a, b) => {
+        setPricingRequests(requestsData.sort((a, b) => {
           const aTime = a.createdAt?.toMillis() || 0;
           const bTime = b.createdAt?.toMillis() || 0;
           return bTime - aTime;
@@ -49,14 +49,14 @@ const AdminDashboard: React.FC = () => {
         setLoading(false);
       },
       (error) => {
-        console.error('Error fetching quotations:', error);
+        console.error('Error fetching pricing requests:', error);
         setLoading(false);
       }
     );
 
     return () => {
       carsUnsubscribe();
-      quotationsUnsubscribe();
+      pricingUnsubscribe();
     };
   }, []);
 
@@ -84,7 +84,7 @@ const AdminDashboard: React.FC = () => {
     try {
       await updateDoc(doc(db, 'cars', car.id!), {
         isActive: !car.isActive,
-        updatedAt: new Date()
+        updatedAt: serverTimestamp()
       });
     } catch (error) {
       console.error('Error updating car:', error);
@@ -120,10 +120,10 @@ const AdminDashboard: React.FC = () => {
           Cars ({cars.length})
         </button>
         <button
-          className={`tab ${activeTab === 'quotations' ? 'active' : ''}`}
-          onClick={() => setActiveTab('quotations')}
+          className={`tab ${activeTab === 'pricingRequests' ? 'active' : ''}`}
+          onClick={() => setActiveTab('pricingRequests')}
         >
-          Quotations ({quotations.filter(q => q.status === 'pending').length} new)
+          Pricing Requests ({pricingRequests.filter(q => q.status === 'pending').length} new)
         </button>
       </div>
 
@@ -135,7 +135,7 @@ const AdminDashboard: React.FC = () => {
             onToggleActive={handleToggleCarActive}
           />
         ) : (
-          <QuotationManager quotations={quotations} />
+          <PricingRequestManager pricingRequests={pricingRequests} />
         )}
       </div>
     </div>

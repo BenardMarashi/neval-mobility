@@ -354,15 +354,12 @@ const CarManager: React.FC<CarManagerProps> = ({ cars, onDelete, onToggleActive 
                   <button type="button" onClick={handleAddImage}>Add</button>
                 </div>
                 <div className="image-list">
-                  {formData.images?.map((image, index) => {
-                    const imageUrl = typeof image === 'string' ? image : image.url;
-                    return (
-                      <div key={index} className="image-item">
-                        <span>{imageUrl}</span>
-                        <button type="button" onClick={() => handleRemoveImage(index)}>Remove</button>
-                      </div>
-                    );
-                  })}
+                {formData.images?.map((image, index) => (
+                    <div key={index} className="image-item">
+                    <span>{image}</span>  {/* CHANGED: removed .url, image is already a string */}
+                    <button type="button" onClick={() => handleRemoveImage(index)}>Remove</button>
+                    </div>
+                ))}
                 </div>
               </div>
               

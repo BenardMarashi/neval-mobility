@@ -9,9 +9,8 @@ service cloud.firestore {
         exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
     }
     
-    // Quotations: Public create, admin read/update/delete
-    match /quotations/{quotationId} {
-      allow create: if true; // Anyone can create quotations
+    match /pricingRequests/{requestId} {
+      allow create: if true;
       allow read, update, delete: if request.auth != null && 
         exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
     }

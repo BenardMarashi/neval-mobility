@@ -1,8 +1,9 @@
-// src/components/AnimatedFeatures.tsx - NEW FILE
+// src/components/AnimatedFeatures.tsx - UPDATED VERSION
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Battery, Gauge, Zap } from 'lucide-react';
 import './AnimatedFeatures.css';
+import { Link } from 'react-router-dom';
 
 const features = [
   {
@@ -15,31 +16,34 @@ const features = [
       { value: '800V', label: 'architecture' },
       { value: '18min', label: '10-80% charge' }
     ],
-    color: 'var(--primary)'
+    color: 'var(--primary)',
+    link: '/technology/blade-battery'  // ADDED
   },
   {
     id: 'driving',
-    title: 'Intelligent Driving',
-    description: 'Advanced ADAS with 33 sensors providing 360° perception. Highway pilot and intelligent parking assistance.',
+    title: 'e-Platform 3.0',  // CHANGED to match actual page
+    description: '8-in-1 integrated platform with revolutionary efficiency. Simplified architecture for maximum performance.',  // UPDATED
     icon: <Gauge size={60} />,
     stats: [
-      { value: '33', label: 'Sensors' },
-      { value: '360°', label: 'Coverage' },
-      { value: 'L2+', label: 'Autonomy' }
+      { value: '8-in-1', label: 'Integration' },  // UPDATED
+      { value: '89%', label: 'Efficiency' },      // UPDATED
+      { value: '-40%', label: 'Volume' }          // UPDATED
     ],
-    color: 'var(--accent)'
+    color: 'var(--accent)',
+    link: '/technology/e-platform'  // ADDED
   },
   {
     id: 'charging',
-    title: 'Charging Network',
-    description: 'Access to over 15,000 charging points across the country. Fast, reliable, and powered by renewable energy.',
+    title: 'Energy Management',  // CHANGED to match actual page
+    description: 'Intelligent energy optimization with regenerative braking and V2G capability. Smart grid integration.',  // UPDATED
     icon: <Zap size={60} />,
     stats: [
-      { value: '15K+', label: 'Charging Points' },
-      { value: '350kW', label: 'Max Power' },
-      { value: '24/7', label: 'Availability' }
+      { value: '90%', label: 'Energy Recovery' },  // UPDATED
+      { value: 'V2G', label: 'Grid Support' },     // UPDATED
+      { value: '+30%', label: 'City Range' }       // UPDATED
     ],
-    color: 'var(--secondary)'
+    color: 'var(--secondary)',
+    link: '/technology/energy-management'  // ADDED
   }
 ];
 
@@ -82,7 +86,7 @@ const AnimatedFeatures: React.FC = () => {
           transition={{ duration: 0.8 }}
         >
           <h2 className="features-title">Advanced Technology</h2>
-          <p className="features-subtitle">Leading the future of electric mobility</p>
+          <p className="features-subtitle">Click to explore our revolutionary innovations</p>
         </motion.div>
 
         <motion.div 
@@ -93,37 +97,52 @@ const AnimatedFeatures: React.FC = () => {
           viewport={{ once: true, margin: "-100px" }}
         >
           {features.map((feature, index) => (
-            <motion.div
-              key={feature.id}
-              className="feature-card"
-              variants={cardVariants}
-              whileHover={{ 
-                y: -10,
-                boxShadow: "0 20px 40px rgba(0,0,0,0.15)"
-              }}
-              transition={{ type: "spring", stiffness: 300 }}
+            <Link 
+              key={feature.id} 
+              to={feature.link}
+              style={{ textDecoration: 'none' }}
             >
-              <div 
-                className="feature-icon"
-                style={{ color: feature.color }}
+              <motion.div
+                className="feature-card"
+                variants={cardVariants}
+                whileHover={{ 
+                  y: -10,
+                  boxShadow: "0 20px 40px rgba(0,0,0,0.15)"
+                }}
+                transition={{ type: "spring", stiffness: 300 }}
+                style={{ cursor: 'pointer' }}  // ADDED
               >
-                {feature.icon}
-              </div>
-              
-              <h3 className="feature-title">{feature.title}</h3>
-              <p className="feature-description">{feature.description}</p>
-              
-              <div className="feature-stats">
-                {feature.stats.map((stat, i) => (
-                  <div key={i} className="stat">
-                    <div className="stat-value" style={{ color: feature.color }}>
-                      {stat.value}
+                <div 
+                  className="feature-icon"
+                  style={{ color: feature.color }}
+                >
+                  {feature.icon}
+                </div>
+                
+                <h3 className="feature-title">{feature.title}</h3>
+                <p className="feature-description">{feature.description}</p>
+                
+                <div className="feature-stats">
+                  {feature.stats.map((stat, i) => (
+                    <div key={i} className="stat">
+                      <div className="stat-value" style={{ color: feature.color }}>
+                        {stat.value}
+                      </div>
+                      <div className="stat-label">{stat.label}</div>
                     </div>
-                    <div className="stat-label">{stat.label}</div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
+                  ))}
+                </div>
+                
+                <div className="feature-link" style={{ 
+                  marginTop: '20px', 
+                  color: feature.color,
+                  fontSize: '14px',
+                  fontWeight: '500'
+                }}>
+                  Learn More →
+                </div>
+              </motion.div>
+            </Link>
           ))}
         </motion.div>
 

@@ -13,6 +13,10 @@ import AdminLogin from './components/AdminLogin';
 import ProtectedRoute from './components/ProtectedRoute';
 import { db, collection, getDocs, query, where, signOutAdmin } from './services/firebase';
 import { Car as CarType, CarCategory } from './types/Car';
+import BladeBattery from './pages/technology/BladeBattery';
+import EPlatform from './pages/technology/EPlatform';
+import EnergyManagement from './pages/technology/EnergyManagement';
+import RequestPricingPage from './pages/RequestPricingPage';
 
 // Lazy load admin dashboard
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
@@ -209,7 +213,6 @@ const AppContent: React.FC = () => {
                   <div className="logo">
                       <img 
                         src="/logo.jpg" 
-                        alt="Neval Mobility - Next Electric Vehicle Alternative" 
                         className="logo-img"
                         loading="eager"
                       />
@@ -353,9 +356,9 @@ const AppContent: React.FC = () => {
                 <div className="footer-column">
                   <h4>Technology</h4>
                   <ul>
-                    <li><a href="#technology">Blade Battery</a></li>
-                    <li><a href="#technology">Intelligent Driving</a></li>
-                    <li><a href="#technology">Safety Features</a></li>
+                    <li><Link to="/technology/blade-battery">Blade Battery</Link></li>
+                    <li><Link to="/technology/e-platform">e-Platform 3.0</Link></li>
+                    <li><Link to="/technology/energy-management">Energy Management</Link></li>
                   </ul>
                 </div>
                 <div className="footer-column">
@@ -419,7 +422,12 @@ const AppContent: React.FC = () => {
       
       {/* Car Detail Route */}
       <Route path="/car/:carId" element={<CarDetail />} />
-      
+      <Route path="/request-pricing" element={<RequestPricingPage />} />
+
+
+      <Route path="/technology/blade-battery" element={<BladeBattery />} />
+      <Route path="/technology/e-platform" element={<EPlatform />} />
+      <Route path="/technology/energy-management" element={<EnergyManagement />} />
       {/* Admin Routes */}
       <Route 
         path="/admin/dashboard" 

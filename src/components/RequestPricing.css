@@ -1,12 +1,12 @@
-/* src/components/BookQuotation.css */
-.request-pricing-form { /* CHANGED from .book-quotation-form */
+/* src/components/RequestPricing.css */
+.request-pricing-form {
   padding: 80px 48px;
   max-width: 800px;
   margin: 0 auto;
   background: white;
 }
 
-.request-pricing-form h2 { /* CHANGED */
+.request-pricing-form h2 {
   font-size: 48px;
   font-weight: 100;
   margin-bottom: 16px;
@@ -63,9 +63,9 @@
   margin-bottom: 24px;
 }
 
-.book-quotation-form input,
-.book-quotation-form select,
-.book-quotation-form textarea {
+.request-pricing-form input,
+.request-pricing-form select,
+.request-pricing-form textarea {
   padding: 16px 24px;
   font-size: 16px;
   border: 1px solid #ddd;
@@ -75,15 +75,15 @@
   border-radius: 4px;
 }
 
-.book-quotation-form input:focus,
-.book-quotation-form select:focus,
-.book-quotation-form textarea:focus {
+.request-pricing-form input:focus,
+.request-pricing-form select:focus,
+.request-pricing-form textarea:focus {
   outline: none;
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(5, 96, 6, 0.1);
 }
 
-.book-quotation-form textarea {
+.request-pricing-form textarea {
   width: 100%;
   resize: vertical;
 }
@@ -116,11 +116,11 @@
 }
 
 @media (max-width: 768px) {
-  .book-quotation-form {
+  .request-pricing-form {
     padding: 60px 24px;
   }
   
-  .book-quotation-form h2 {
+  .request-pricing-form h2 {
     font-size: 36px;
   }
   

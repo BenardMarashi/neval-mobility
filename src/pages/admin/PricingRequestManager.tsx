@@ -1,24 +1,24 @@
-// src/pages/admin/QuotationManager.tsx - REPLACE ENTIRE FILE
+// src/pages/admin/PricingRequestManager.tsx
 import React, { useState } from 'react';
 import { db, updateDoc, doc } from '../../services/firebase';
 import { PricingRequest, PricingRequestStatus } from '../../types/PricingRequest';
-import './QuotationManager.css';
-
-interface QuotationManagerProps {
-  quotations: PricingRequest[];
+import './PricingRequestManager.css';
+import { serverTimestamp } from 'firebase/firestore';
+interface PricingRequestManagerProps {
+  pricingRequests: PricingRequest[];
 }
 
-const QuotationManager: React.FC<QuotationManagerProps> = ({ quotations }) => {
+const PricingRequestManager: React.FC<PricingRequestManagerProps> = ({ pricingRequests }) => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [notes, setNotes] = useState<{ [key: string]: string }>({});
 
-  const handleStatusChange = async (quotation: PricingRequest, newStatus: PricingRequestStatus) => {
-    if (!quotation.id) return;
+  const handleStatusChange = async (request: PricingRequest, newStatus: PricingRequestStatus) => {
+    if (!request.id) return;
     
     try {
-      await updateDoc(doc(db, 'quotations', quotation.id), {
+      await updateDoc(doc(db, 'pricingRequests', request.id), {
         status: newStatus,
-        updatedAt: new Date()
+        updatedAt: serverTimestamp()
       });
     } catch (error) {
       console.error('Error updating status:', error);
@@ -26,13 +26,13 @@ const QuotationManager: React.FC<QuotationManagerProps> = ({ quotations }) => {
     }
   };
 
-  const handleNotesUpdate = async (quotation: PricingRequest) => {
-    if (!quotation.id) return;
+  const handleNotesUpdate = async (request: PricingRequest) => {
+    if (!request.id) return;
     
     try {
-      await updateDoc(doc(db, 'quotations', quotation.id), {
-        notes: notes[quotation.id] || quotation.notes || '',
-        updatedAt: new Date()
+      await updateDoc(doc(db, 'pricingRequests', request.id), {
+        notes: notes[request.id] || request.notes || '',
+        updatedAt: serverTimestamp()
       });
       alert('Notes updated successfully');
     } catch (error) {
@@ -58,68 +58,68 @@ const QuotationManager: React.FC<QuotationManagerProps> = ({ quotations }) => {
   };
 
   return (
-    <div className="quotation-manager">
+    <div className="pricing-request-manager">
       <div className="manager-header">
-        <h2>Quotation Requests</h2>
+        <h2>Pricing Requests</h2>
         <div className="stats">
-          <span>Total: {quotations.length}</span>
-          <span>Pending: {quotations.filter(q => q.status === 'pending').length}</span>
+          <span>Total: {pricingRequests.length}</span>
+          <span>Pending: {pricingRequests.filter(q => q.status === 'pending').length}</span>
         </div>
       </div>
 
-      <div className="quotations-list">
-        {quotations.map((quotation) => (
+      <div className="requests-list">
+        {pricingRequests.map((request) => (
           <div 
-            key={quotation.id} 
-            className={`quotation-card ${expandedId === quotation.id ? 'expanded' : ''}`}
+            key={request.id} 
+            className={`request-card ${expandedId === request.id ? 'expanded' : ''}`}
           >
             <div 
-              className="quotation-header"
-              onClick={() => setExpandedId(expandedId === quotation.id ? null : quotation.id)}
+              className="request-header"
+              onClick={() => setExpandedId(expandedId === request.id ? null : request.id)}
             >
-              <div className="quotation-info">
-                <h3>{quotation.customerName}</h3>  {/* FIXED: Using customerName */}
-                <p>{quotation.carName} • {formatDate(quotation.createdAt)}</p>
+              <div className="request-info">
+                <h3>{request.customerName}</h3>
+                <p>{request.carName} • {formatDate(request.createdAt)}</p>
               </div>
-              <div className="quotation-status">
+              <div className="request-status">
                 <span 
                   className="status-badge"
-                  style={{ backgroundColor: getStatusColor(quotation.status) }}
+                  style={{ backgroundColor: getStatusColor(request.status) }}
                 >
-                  {quotation.status}
+                  {request.status}
                 </span>
               </div>
             </div>
 
-            {expandedId === quotation.id && (
-              <div className="quotation-details">
+            {expandedId === request.id && (
+              <div className="request-details">
                 <div className="detail-grid">
                   <div className="detail-item">
                     <label>Email:</label>
-                    <a href={`mailto:${quotation.email}`}>{quotation.email}</a>
+                    <a href={`mailto:${request.email}`}>{request.email}</a>
                   </div>
                   <div className="detail-item">
                     <label>Phone:</label>
-                    <a href={`tel:${quotation.phone}`}>{quotation.phone}</a>
+                    <a href={`tel:${request.phone}`}>{request.phone}</a>
                   </div>
                   <div className="detail-item">
                     <label>Preferred Date:</label>
-                    <span>{quotation.preferredDate || 'Not specified'}</span>
+                    <span>{request.preferredDate || 'Not specified'}</span>
                   </div>
                   <div className="detail-item">
                     <label>Preferred Time:</label>
-                    <span>{quotation.preferredTime || 'Not specified'}</span>
+                    <span>{request.preferredTime || 'Not specified'}</span>
                   </div>
                   <div className="detail-item">
                     <label>Location:</label>
-                    <span>{quotation.location || 'Not specified'}</span>
+                    <span>{request.location || 'Not specified'}</span>
                   </div>
                 </div>
 
-                {quotation.message && (
+                {request.message && (
                   <div className="detail-message">
                     <label>Message:</label>
-                    <p>{quotation.message}</p>
+                    <p>{request.message}</p>
                   </div>
                 )}
 
@@ -127,8 +127,8 @@ const QuotationManager: React.FC<QuotationManagerProps> = ({ quotations }) => {
                   <div className="status-update">
                     <label>Update Status:</label>
                     <select 
-                      value={quotation.status}
-                      onChange={(e) => handleStatusChange(quotation, e.target.value as PricingRequestStatus)}
+                      value={request.status}
+                      onChange={(e) => handleStatusChange(request, e.target.value as PricingRequestStatus)}
                     >
                       <option value="pending">Pending</option>
                       <option value="contacted">Contacted</option>
@@ -140,13 +140,13 @@ const QuotationManager: React.FC<QuotationManagerProps> = ({ quotations }) => {
                   <div className="notes-section">
                     <label>Admin Notes:</label>
                     <textarea
-                      value={notes[quotation.id!] ?? quotation.notes ?? ''}
-                      onChange={(e) => setNotes({ ...notes, [quotation.id!]: e.target.value })}
+                      value={notes[request.id!] ?? request.notes ?? ''}
+                      onChange={(e) => setNotes({ ...notes, [request.id!]: e.target.value })}
                       placeholder="Add internal notes..."
                       rows={3}
                     />
                     <button 
-                      onClick={() => handleNotesUpdate(quotation)}
+                      onClick={() => handleNotesUpdate(request)}
                       className="btn-save-notes"
                     >
                       Save Notes
@@ -158,9 +158,9 @@ const QuotationManager: React.FC<QuotationManagerProps> = ({ quotations }) => {
           </div>
         ))}
         
-        {quotations.length === 0 && (
+        {pricingRequests.length === 0 && (
           <div className="empty-state">
-            <p>No quotation requests yet.</p>
+            <p>No pricing requests yet.</p>
           </div>
         )}
       </div>
@@ -168,4 +168,4 @@ const QuotationManager: React.FC<QuotationManagerProps> = ({ quotations }) => {
   );
 };
 
-export default QuotationManager;
+export default PricingRequestManager;
