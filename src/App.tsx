@@ -18,6 +18,8 @@ import EPlatform from './pages/technology/EPlatform';
 import EnergyManagement from './pages/technology/EnergyManagement';
 import RequestPricingPage from './pages/RequestPricingPage';
 import Fleet from './pages/Fleet';
+import AboutUs from './pages/AboutUs';
+import ContactUs from './pages/ContactUs';
 
 // Lazy load admin dashboard
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
@@ -224,9 +226,7 @@ const AppContent: React.FC = () => {
               <ul className="nav-links">
                 <li><a href="#fleet" onClick={(e) => { e.preventDefault(); scrollToSection('vehicles'); }}>Fleet</a></li>
                 <li><a href="#technology" onClick={(e) => { e.preventDefault(); scrollToSection('technology'); }}>Technology</a></li>
-                <li><a href="#charging" onClick={(e) => { e.preventDefault(); scrollToSection('charging'); }}>Charging</a></li>
-                <li><a href="#sustainability" onClick={(e) => { e.preventDefault(); scrollToSection('sustainability'); }}>Sustainability</a></li>
-                <li><a href="#about" onClick={(e) => { e.preventDefault(); scrollToSection('about'); }}>About</a></li>
+                <li><Link to="/about">About</Link></li>
               </ul>
               <button className="nav-cta" onClick={() => navigate('/request-pricing')}>Request Pricing</button>
             </div>
@@ -282,15 +282,9 @@ const AppContent: React.FC = () => {
                 <div className="hero-buttons">
                   <button 
                     className="btn-primary"
-                    onClick={() => scrollToSection('vehicles')}
+                    onClick={() => navigate('/fleet')}
                   >
                     Explore Fleet
-                  </button>
-                  <button 
-                    className="btn-secondary"
-                    onClick={() => scrollToSection('quotation')}
-                  >
-                    Request Pricing
                   </button>
                 </div>
               </div>
@@ -372,16 +366,9 @@ const AppContent: React.FC = () => {
                 <div className="footer-column">
                   <h4>Support</h4>
                   <ul>
-                    <li><a href="#contact">Contact Us</a></li>
-                    <li><a href="#quotation">Request Pricing</a></li>
-                    <li><a href="#locations">Locations</a></li>
-                  </ul>
-                </div>
-                <div className="footer-column">
-                  <h4>Company</h4>
-                  <ul>
-                    <li><a href="#about">About Us</a></li>
-                    <li><a href="#news">News</a></li>
+                    <li><Link to="/contact">Contact Us</Link></li>
+                    <li><Link to="/request-pricing">Request Pricing</Link></li>
+                    <li><Link to="/about">About</Link></li>
                   </ul>
                 </div>
               </div>
@@ -432,7 +419,8 @@ const AppContent: React.FC = () => {
       <Route path="/car/:carId" element={<CarDetail />} />
       <Route path="/request-pricing" element={<RequestPricingPage />} />
       <Route path="/fleet" element={<Fleet />} />
-
+      <Route path="/about" element={<AboutUs />} />
+      <Route path="/contact" element={<ContactUs />} />
       <Route path="/technology/blade-battery" element={<BladeBattery />} />
       <Route path="/technology/e-platform" element={<EPlatform />} />
       <Route path="/technology/energy-management" element={<EnergyManagement />} />

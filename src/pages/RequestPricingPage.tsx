@@ -7,11 +7,57 @@ import { ChevronLeft } from 'lucide-react';
 import './RequestPricingPage.css';
 
 const EUROPEAN_COUNTRIES = [
-  'Austria', 'Belgium', 'Bulgaria', 'Croatia', 'Cyprus', 'Czech Republic',
-  'Denmark', 'Estonia', 'Finland', 'France', 'Germany', 'Greece',
-  'Hungary', 'Ireland', 'Italy', 'Latvia', 'Lithuania', 'Luxembourg',
-  'Malta', 'Netherlands', 'Poland', 'Portugal', 'Romania', 'Slovakia',
-  'Slovenia', 'Spain', 'Sweden', 'United Kingdom', 'Norway', 'Switzerland'
+  'Albania',
+  'Andorra',
+  'Armenia',
+  'Austria',
+  'Azerbaijan',
+  'Belarus',
+  'Belgium',
+  'Bosnia and Herzegovina',
+  'Bulgaria',
+  'Croatia',
+  'Cyprus',
+  'Czech Republic',
+  'Denmark',
+  'Estonia',
+  'Finland',
+  'France',
+  'Georgia',
+  'Germany',
+  'Greece',
+  'Hungary',
+  'Iceland',
+  'Ireland',
+  'Italy',
+  'Kazakhstan', // European part
+  'Kosovo',
+  'Latvia',
+  'Liechtenstein',
+  'Lithuania',
+  'Luxembourg',
+  'Malta',
+  'Moldova',
+  'Monaco',
+  'Montenegro',
+  'Netherlands',
+  'North Macedonia',
+  'Norway',
+  'Poland',
+  'Portugal',
+  'Romania',
+  'Russia', // European part
+  'San Marino',
+  'Serbia',
+  'Slovakia',
+  'Slovenia',
+  'Spain',
+  'Sweden',
+  'Switzerland',
+  'Turkey', // European part
+  'Ukraine',
+  'United Kingdom',
+  'Vatican City'
 ].sort();
 
 const RequestPricingPage: React.FC = () => {

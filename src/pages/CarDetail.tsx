@@ -111,26 +111,6 @@ const CarDetail: React.FC = () => {
         {/* Car Info Bar */}
         <div className="car-info-bar">
           <h1 className="car-model-name">{car.name}</h1>
-          
-          <div className="car-key-specs">
-            <div className="spec-item-minimal">
-              <span className="spec-value-minimal">{car.range.replace(/[^0-9]/g, '')}</span>
-              <span className="spec-unit">km</span>
-              <span className="spec-label-minimal">RANGE</span>
-            </div>
-            
-            <div className="spec-item-minimal">
-              <span className="spec-value-minimal">{car.acceleration.replace(/[^0-9.]/g, '')}</span>
-              <span className="spec-unit">s</span>
-              <span className="spec-label-minimal">0-100 KM/H</span>
-            </div>
-            
-            <div className="spec-item-minimal">
-              <span className="spec-value-minimal">{car.topSpeed.replace(/[^0-9]/g, '')}</span>
-              <span className="spec-unit">km/h</span>
-              <span className="spec-label-minimal">TOP SPEED</span>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -139,20 +119,6 @@ const CarDetail: React.FC = () => {
         <div className="description-container">
           <h2>Overview</h2>
           <p className="car-description">{car.description}</p>
-          
-          {car.features && car.features.length > 0 && (
-            <div className="features-highlights">
-              <h3>Key Features</h3>
-              <div className="features-grid-minimal">
-                {car.features.slice(0, 6).map((feature, index) => (
-                  <div key={index} className="feature-item-minimal">
-                    <span className="feature-check">✓</span>
-                    <span>{feature}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       </section>
     </div>
