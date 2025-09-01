@@ -1,4 +1,4 @@
-// src/components/CategoryFilter.tsx - NEW FILE
+// src/components/CategoryFilter.tsx - COMPLETE REPLACEMENT
 import React from 'react';
 import { CarCategory, CATEGORY_LABELS } from '../types/Car';
 import './CategoryFilter.css';
@@ -21,6 +21,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
     'denza',
     'leopard'
   ];
+
 
   const getCategoryDisplay = (cat: CarCategory | 'all'): string => {
     if (cat === 'all') return 'All Models';

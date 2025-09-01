@@ -12,11 +12,12 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AdminLogin from './components/AdminLogin';
 import ProtectedRoute from './components/ProtectedRoute';
 import { db, collection, getDocs, query, where, signOutAdmin } from './services/firebase';
-import { Car as CarType, CarCategory } from './types/Car';
+import { Car as CarType, CarCategory, CATEGORY_LABELS  } from './types/Car';
 import BladeBattery from './pages/technology/BladeBattery';
 import EPlatform from './pages/technology/EPlatform';
 import EnergyManagement from './pages/technology/EnergyManagement';
 import RequestPricingPage from './pages/RequestPricingPage';
+import Fleet from './pages/Fleet';
 
 // Lazy load admin dashboard
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
@@ -73,7 +74,7 @@ const AppContent: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [firebaseConnected, setFirebaseConnected] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<CarCategory | 'all'>(
-    (searchParams.get('category') as CarCategory | 'all') || 'all'
+    (searchParams.get('category') as CarCategory | 'all') || 'ocean network'
   );
   const [categoryCounts, setCategoryCounts] = useState<Record<CarCategory | 'all', number>>({
     'all': 0,
@@ -119,6 +120,9 @@ const AppContent: React.FC = () => {
               title: data.name || 'Unnamed Car',
               description: `${data.type || 'Electric Vehicle'}. ${data.range || 'N/A'} range. From ${data.price || 'Contact Us'}`,
               link: `/car/${doc.id}`,
+              type: data.type || 'Electric Vehicle',
+              price: data.price || 'Contact for pricing',
+              image: data.images && data.images.length > 0 ? data.images[0] : '/placeholder-car.jpg',
               icon: <Car className="h-4 w-4 text-white" />,
               category: data.category || 'ocean network' as CarCategory
             };
@@ -218,13 +222,13 @@ const AppContent: React.FC = () => {
                       />
                     </div>
               <ul className="nav-links">
-                <li><a href="#vehicles" onClick={(e) => { e.preventDefault(); scrollToSection('vehicles'); }}>Vehicles</a></li>
+                <li><a href="#fleet" onClick={(e) => { e.preventDefault(); scrollToSection('vehicles'); }}>Fleet</a></li>
                 <li><a href="#technology" onClick={(e) => { e.preventDefault(); scrollToSection('technology'); }}>Technology</a></li>
                 <li><a href="#charging" onClick={(e) => { e.preventDefault(); scrollToSection('charging'); }}>Charging</a></li>
                 <li><a href="#sustainability" onClick={(e) => { e.preventDefault(); scrollToSection('sustainability'); }}>Sustainability</a></li>
                 <li><a href="#about" onClick={(e) => { e.preventDefault(); scrollToSection('about'); }}>About</a></li>
               </ul>
-              <button className="nav-cta">Request Pricing</button>
+              <button className="nav-cta" onClick={() => navigate('/request-pricing')}>Request Pricing</button>
             </div>
           </nav>
 
@@ -306,32 +310,36 @@ const AppContent: React.FC = () => {
               </p>
             </div>
             
-            {/* Category Filter */}
-            <CategoryFilter 
-              selectedCategory={selectedCategory}
-              onCategoryChange={handleCategoryChange}
-              counts={categoryCounts}
-            />
+            {/* Category Filter - Home page without ALL */}
+            <div className="category-filter">
+              <div className="category-pills">
+                {(['ocean network', 'dynasty network', 'denza', 'leopard'] as CarCategory[]).map(category => (
+                  <button
+                    key={category}
+                    className={`category-pill ${selectedCategory === category ? 'active' : ''}`}
+                    onClick={() => handleCategoryChange(category)}
+                  >
+                    <span className="pill-label">{CATEGORY_LABELS[category]}</span>
+                    <span className="pill-count">{categoryCounts[category] || 0}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
             
             {/* Only render Carousel if we have vehicles */}
             {vehicles && vehicles.length > 0 ? (
-              <div className="carousel-wrapper">
-                <Carousel
-                  items={vehicles}
-                  baseWidth={window.innerWidth * 0.8}
-                  autoplay={false}
-                  autoplayDelay={4000}
-                  pauseOnHover={true}
-                  loop={true}
-                  round={false}
-                />
-              </div>
+              <Carousel
+                items={vehicles}
+                onRequestPricing={(carId) => {
+                  navigate(`/request-pricing?car=${carId}`);
+                }}
+              />
             ) : (
               <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
                 {loading ? 'Loading vehicles...' : 
-                 selectedCategory !== 'all' ? 
-                 'No vehicles available in this category.' : 
-                 'No vehicles available at this time.'}
+                selectedCategory !== 'all' ? 
+                'No vehicles available in this category.' : 
+                'No vehicles available at this time.'}
               </div>
             )}
           </section>
@@ -344,13 +352,13 @@ const AppContent: React.FC = () => {
             <div className="footer-content">
               <div className="footer-grid">
                 <div className="footer-column">
-                  <h4>Vehicles</h4>
+                  <h4>Fleet</h4>
                   <ul>
-                    {allVehicles.map(vehicle => (
-                      <li key={vehicle.id}>
-                        <Link to={vehicle.link}>{vehicle.title}</Link>
-                      </li>
-                    ))}
+                    <li><Link to="/fleet">All Models</Link></li>
+                    <li><Link to="/fleet?category=ocean%20network">Ocean Network</Link></li>
+                    <li><Link to="/fleet?category=dynasty%20network">Dynasty Network</Link></li>
+                    <li><Link to="/fleet?category=denza">Denza</Link></li>
+                    <li><Link to="/fleet?category=leopard">Leopard</Link></li>
                   </ul>
                 </div>
                 <div className="footer-column">
@@ -423,7 +431,7 @@ const AppContent: React.FC = () => {
       {/* Car Detail Route */}
       <Route path="/car/:carId" element={<CarDetail />} />
       <Route path="/request-pricing" element={<RequestPricingPage />} />
-
+      <Route path="/fleet" element={<Fleet />} />
 
       <Route path="/technology/blade-battery" element={<BladeBattery />} />
       <Route path="/technology/e-platform" element={<EPlatform />} />
