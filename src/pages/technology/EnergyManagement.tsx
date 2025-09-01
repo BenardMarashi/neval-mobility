@@ -1,30 +1,11 @@
 // src/pages/technology/EnergyManagement.tsx
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import './TechnologyPages.css';
 
 const EnergyManagement: React.FC = () => {
   const [activeMode, setActiveMode] = useState<'eco' | 'normal' | 'sport'>('normal');
-  const [energyFlow, setEnergyFlow] = useState({ 
-    battery: 75, 
-    motor: 30, 
-    regen: 0,
-    auxiliary: 5 
-  });
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setEnergyFlow(prev => ({
-        battery: Math.max(20, Math.min(95, prev.battery + (Math.random() - 0.5) * 2)),
-        motor: activeMode === 'eco' ? 20 : activeMode === 'sport' ? 60 : 35,
-        regen: Math.random() > 0.7 ? Math.random() * 30 : 0,
-        auxiliary: 3 + Math.random() * 4
-      }));
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [activeMode]);
 
   return (
     <div className="tech-page energy-management">
@@ -37,65 +18,54 @@ const EnergyManagement: React.FC = () => {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="tech-hero energy-hero">
-        <div className="energy-visualization">
-          <div className="energy-center">
-            <div className="battery-level" style={{ height: `${energyFlow.battery}%` }}>
-              <span>{energyFlow.battery.toFixed(0)}%</span>
-            </div>
-          </div>
+      {/* Simplified Hero Section */}
+      <section className="tech-hero-simple">
+        <div className="hero-content-simple">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="hero-badge"
+          >
+            Intelligent Optimization
+          </motion.div>
           
-          <AnimatePresence>
-            {energyFlow.motor > 0 && (
-              <motion.div 
-                className="energy-flow-line motor-line"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                exit={{ pathLength: 0 }}
-              />
-            )}
-            {energyFlow.regen > 0 && (
-              <motion.div 
-                className="energy-flow-line regen-line"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                exit={{ pathLength: 0 }}
-              />
-            )}
-          </AnimatePresence>
-          
-          <div className="energy-stats">
-            <div className="stat motor-stat">
-              <span>Motor</span>
-              <strong>{energyFlow.motor}kW</strong>
-            </div>
-            <div className="stat regen-stat">
-              <span>Regeneration</span>
-              <strong>{energyFlow.regen.toFixed(1)}kW</strong>
-            </div>
-            <div className="stat aux-stat">
-              <span>Auxiliary</span>
-              <strong>{energyFlow.auxiliary.toFixed(1)}kW</strong>
-            </div>
-          </div>
-        </div>
-        
-        <div className="hero-content">
           <motion.h1
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
           >
-            Intelligent Energy Management
+            Energy Management System
           </motion.h1>
+          
           <motion.p
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
           >
-            AI-powered system that maximizes efficiency and minimizes environmental impact
+            AI-powered system that maximizes efficiency and minimizes environmental impact. 
+            Smart regeneration, V2G capability, and adaptive driving modes.
           </motion.p>
+          
+          <motion.div 
+            className="hero-stats"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            <div className="hero-stat">
+              <span className="stat-number">90%</span>
+              <span className="stat-text">Energy Recovery</span>
+            </div>
+            <div className="hero-stat">
+              <span className="stat-number">V2G</span>
+              <span className="stat-text">Grid Support</span>
+            </div>
+            <div className="hero-stat">
+              <span className="stat-number">+30%</span>
+              <span className="stat-text">City Range</span>
+            </div>
+          </motion.div>
         </div>
       </section>
 
@@ -194,40 +164,26 @@ const EnergyManagement: React.FC = () => {
       <section className="tech-section regeneration">
         <div className="section-content">
           <h2>Regenerative Braking System</h2>
-          <div className="regen-grid">
-            <div className="regen-explanation">
-              <h3>Energy Recovery Technology</h3>
-              <p>
-                Our advanced regenerative braking system captures up to 90% of kinetic energy during 
-                deceleration, converting it back into electricity to charge the battery. This recovered 
-                energy would otherwise be lost as heat in traditional friction brakes.
-              </p>
-              <div className="regen-benefits">
-                <div className="benefit">
-                  <strong>30%</strong>
-                  <span>Range increase in city driving</span>
-                </div>
-                <div className="benefit">
-                  <strong>70%</strong>
-                  <span>Less brake pad wear</span>
-                </div>
-                <div className="benefit">
-                  <strong>5 tons</strong>
-                  <span>CO₂ saved per year</span>
-                </div>
+          <div className="regen-explanation">
+            <h3>Energy Recovery Technology</h3>
+            <p>
+              Our advanced regenerative braking system captures up to 90% of kinetic energy during 
+              deceleration, converting it back into electricity to charge the battery. This recovered 
+              energy would otherwise be lost as heat in traditional friction brakes.
+            </p>
+            <div className="regen-benefits">
+              <div className="benefit">
+                <strong>30%</strong>
+                <span>Range increase in city driving</span>
               </div>
-            </div>
-            <div className="regen-visual">
-              <motion.div 
-                className="wheel"
-                animate={{ rotate: -360 }}
-                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-              />
-              <motion.div 
-                className="energy-particles"
-                animate={{ opacity: [0, 1, 0], y: [-20, -80] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-              />
+              <div className="benefit">
+                <strong>70%</strong>
+                <span>Less brake pad wear</span>
+              </div>
+              <div className="benefit">
+                <strong>5 tons</strong>
+                <span>CO₂ saved per year</span>
+              </div>
             </div>
           </div>
         </div>
@@ -237,34 +193,25 @@ const EnergyManagement: React.FC = () => {
       <section className="tech-section grid-integration">
         <div className="section-content">
           <h2>Vehicle-to-Grid (V2G) Technology</h2>
-          <div className="v2g-showcase">
-            <div className="v2g-diagram">
-              <div className="grid-node">Power Grid</div>
-              <div className="connection bidirectional"></div>
-              <div className="car-node">EV Battery</div>
-              <div className="connection"></div>
-              <div className="home-node">Home</div>
-            </div>
-            <div className="v2g-info">
-              <h3>Your Car as a Power Station</h3>
-              <p>
-                With V2G technology, your vehicle becomes a mobile energy storage unit. During peak 
-                renewable energy production, charge your car with clean energy. During peak demand, 
-                sell energy back to the grid or power your home during outages.
-              </p>
-              <div className="v2g-stats">
-                <div className="stat">
-                  <span className="value">$2,000</span>
-                  <span className="label">Annual earnings potential</span>
-                </div>
-                <div className="stat">
-                  <span className="value">3 days</span>
-                  <span className="label">Home backup power</span>
-                </div>
-                <div className="stat">
-                  <span className="value">100%</span>
-                  <span className="label">Renewable integration</span>
-                </div>
+          <div className="v2g-info">
+            <h3>Your Car as a Power Station</h3>
+            <p>
+              With V2G technology, your vehicle becomes a mobile energy storage unit. During peak 
+              renewable energy production, charge your car with clean energy. During peak demand, 
+              sell energy back to the grid or power your home during outages.
+            </p>
+            <div className="v2g-stats">
+              <div className="stat">
+                <span className="value">$2,000</span>
+                <span className="label">Annual earnings potential</span>
+              </div>
+              <div className="stat">
+                <span className="value">3 days</span>
+                <span className="label">Home backup power</span>
+              </div>
+              <div className="stat">
+                <span className="value">100%</span>
+                <span className="label">Renewable integration</span>
               </div>
             </div>
           </div>

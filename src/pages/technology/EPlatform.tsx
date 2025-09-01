@@ -1,20 +1,12 @@
 // src/pages/technology/EPlatform.tsx
-import React, { useRef } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import './TechnologyPages.css';
 
 const EPlatform: React.FC = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
-  });
-
-  const rotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
-
   return (
-    <div className="tech-page e-platform" ref={containerRef}>
+    <div className="tech-page e-platform">
       <nav className="tech-nav">
         <Link to="/" className="back-link">← Back to Home</Link>
         <div className="tech-nav-links">
@@ -24,39 +16,54 @@ const EPlatform: React.FC = () => {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="tech-hero platform-hero">
-        <motion.div 
-          className="platform-visual"
-          style={{ rotate }}
-        >
-          <div className="platform-core">
-            <div className="component motor">Motor</div>
-            <div className="component controller">Controller</div>
-            <div className="component transmission">Transmission</div>
-            <div className="component pdu">PDU</div>
-            <div className="component dc-dc">DC-DC</div>
-            <div className="component obc">OBC</div>
-            <div className="component vcu">VCU</div>
-            <div className="component bms">BMS</div>
-          </div>
-        </motion.div>
-        
-        <div className="hero-content">
+      {/* Simplified Hero Section */}
+      <section className="tech-hero-simple">
+        <div className="hero-content-simple">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="hero-badge"
+          >
+            Revolutionary Integration
+          </motion.div>
+          
           <motion.h1
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
           >
             e-Platform 3.0
           </motion.h1>
+          
           <motion.p
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
           >
-            8-in-1 integration that revolutionizes electric vehicle efficiency
+            8-in-1 integration that revolutionizes electric vehicle efficiency. 
+            40% less volume, 23% less weight, and 10% higher efficiency than traditional EVs.
           </motion.p>
+          
+          <motion.div 
+            className="hero-stats"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            <div className="hero-stat">
+              <span className="stat-number">8-in-1</span>
+              <span className="stat-text">Power Module</span>
+            </div>
+            <div className="hero-stat">
+              <span className="stat-number">89%</span>
+              <span className="stat-text">System Efficiency</span>
+            </div>
+            <div className="hero-stat">
+              <span className="stat-number">-40%</span>
+              <span className="stat-text">Component Volume</span>
+            </div>
+          </motion.div>
         </div>
       </section>
 
@@ -145,35 +152,20 @@ const EPlatform: React.FC = () => {
       <section className="tech-section heat-pump">
         <div className="section-content">
           <h2>Wide-Temperature Heat Pump</h2>
-          <div className="heat-pump-grid">
-            <div className="heat-pump-visual">
-              <motion.div 
-                className="heat-flow"
-                animate={{ 
-                  background: [
-                    "linear-gradient(45deg, #ff6b6b, #4ecdc4)",
-                    "linear-gradient(45deg, #4ecdc4, #ff6b6b)",
-                    "linear-gradient(45deg, #ff6b6b, #4ecdc4)"
-                  ]
-                }}
-                transition={{ duration: 3, repeat: Infinity }}
-              />
-            </div>
-            <div className="heat-pump-info">
-              <h3>Energy Recovery System</h3>
-              <p>
-                The integrated heat pump captures waste heat from the motor, inverter, and battery, 
-                using it for cabin heating. This revolutionary system works efficiently even at -30°C.
-              </p>
-              <div className="efficiency-stats">
-                <div className="stat">
-                  <span className="stat-value">60%</span>
-                  <span className="stat-label">Less Energy for Heating</span>
-                </div>
-                <div className="stat">
-                  <span className="stat-value">20%</span>
-                  <span className="stat-label">Winter Range Improvement</span>
-                </div>
+          <div className="heat-pump-info">
+            <h3>Energy Recovery System</h3>
+            <p>
+              The integrated heat pump captures waste heat from the motor, inverter, and battery, 
+              using it for cabin heating. This revolutionary system works efficiently even at -30°C.
+            </p>
+            <div className="efficiency-stats">
+              <div className="stat">
+                <span className="stat-value">60%</span>
+                <span className="stat-label">Less Energy for Heating</span>
+              </div>
+              <div className="stat">
+                <span className="stat-value">20%</span>
+                <span className="stat-label">Winter Range Improvement</span>
               </div>
             </div>
           </div>

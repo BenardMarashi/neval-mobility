@@ -1,21 +1,12 @@
 // src/pages/technology/BladeBattery.tsx
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import './TechnologyPages.css';
 
 const BladeBattery: React.FC = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1, 0.3]);
-
   return (
-    <div className="tech-page blade-battery" ref={containerRef}>
+    <div className="tech-page blade-battery">
       <nav className="tech-nav">
         <Link to="/" className="back-link">← Back to Home</Link>
         <div className="tech-nav-links">
@@ -25,40 +16,54 @@ const BladeBattery: React.FC = () => {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="tech-hero">
-        <motion.div 
-          className="hero-background"
-          style={{ y, opacity }}
-        >
-          <div className="battery-grid">
-            {[...Array(12)].map((_, i) => (
-              <motion.div 
-                key={i} 
-                className="battery-cell"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: i * 0.1 }}
-              />
-            ))}
-          </div>
-        </motion.div>
-        
-        <div className="hero-content">
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
+      {/* Simplified Hero Section */}
+      <section className="tech-hero-simple">
+        <div className="hero-content-simple">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.6 }}
+            className="hero-badge"
+          >
+            Revolutionary LFP Technology
+          </motion.div>
+          
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
           >
             Blade Battery Technology
           </motion.h1>
+          
           <motion.p
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
           >
-            Revolutionary LFP chemistry that transforms electric vehicle safety and sustainability
+            The safest battery technology ever developed. Zero thermal runaway risk, 
+            1 million kilometer lifespan, and 96% recyclable materials.
           </motion.p>
+          
+          <motion.div 
+            className="hero-stats"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            <div className="hero-stat">
+              <span className="stat-number">0</span>
+              <span className="stat-text">Cobalt Required</span>
+            </div>
+            <div className="hero-stat">
+              <span className="stat-number">5000+</span>
+              <span className="stat-text">Charge Cycles</span>
+            </div>
+            <div className="hero-stat">
+              <span className="stat-number">-45%</span>
+              <span className="stat-text">CO₂ Emissions</span>
+            </div>
+          </motion.div>
         </div>
       </section>
 

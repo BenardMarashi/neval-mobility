@@ -1,53 +1,50 @@
-// src/components/AnimatedFeatures.tsx - UPDATED VERSION
+// src/components/AnimatedFeatures.tsx - NO BACKGROUND VERSION
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Battery, Gauge, Zap } from 'lucide-react';
 import './AnimatedFeatures.css';
 import { Link } from 'react-router-dom';
 
-const features = [
-  {
-    id: 'battery',
-    title: 'Blade Battery Technology',
-    description: 'Revolutionary LFP battery technology delivering unmatched safety, longevity, and performance. Over 1 million kilometers lifespan.',
-    icon: <Battery size={60} />,
-    stats: [
-      { value: '1M+', label: 'km lifespan' },
-      { value: '800V', label: 'architecture' },
-      { value: '18min', label: '10-80% charge' }
-    ],
-    color: 'var(--primary)',
-    link: '/technology/blade-battery'  // ADDED
-  },
-  {
-    id: 'driving',
-    title: 'e-Platform 3.0',  // CHANGED to match actual page
-    description: '8-in-1 integrated platform with revolutionary efficiency. Simplified architecture for maximum performance.',  // UPDATED
-    icon: <Gauge size={60} />,
-    stats: [
-      { value: '8-in-1', label: 'Integration' },  // UPDATED
-      { value: '89%', label: 'Efficiency' },      // UPDATED
-      { value: '-40%', label: 'Volume' }          // UPDATED
-    ],
-    color: 'var(--accent)',
-    link: '/technology/e-platform'  // ADDED
-  },
-  {
-    id: 'charging',
-    title: 'Energy Management',  // CHANGED to match actual page
-    description: 'Intelligent energy optimization with regenerative braking and V2G capability. Smart grid integration.',  // UPDATED
-    icon: <Zap size={60} />,
-    stats: [
-      { value: '90%', label: 'Energy Recovery' },  // UPDATED
-      { value: 'V2G', label: 'Grid Support' },     // UPDATED
-      { value: '+30%', label: 'City Range' }       // UPDATED
-    ],
-    color: 'var(--secondary)',
-    link: '/technology/energy-management'  // ADDED
-  }
-];
-
 const AnimatedFeatures: React.FC = () => {
+  const features = [
+    {
+      id: 'battery',
+      title: 'Blade Battery Technology',
+      description: 'Revolutionary LFP battery technology delivering unmatched safety, longevity, and performance. Over 1 million kilometers lifespan.',
+      icon: <Battery size={48} style={{ color: '#6ec184', stroke: '#6ec184' }} />,
+      stats: [
+        { value: '1M+', label: 'km lifespan' },
+        { value: '800V', label: 'architecture' },
+        { value: '18min', label: '10-80% charge' }
+      ],
+      link: '/technology/blade-battery'
+    },
+    {
+      id: 'driving',
+      title: 'e-Platform 3.0',
+      description: '8-in-1 integrated platform with revolutionary efficiency. Simplified architecture for maximum performance.',
+      icon: <Gauge size={48} style={{ color: '#6ec184', stroke: '#6ec184' }} />,
+      stats: [
+        { value: '8-in-1', label: 'Integration' },
+        { value: '89%', label: 'Efficiency' },
+        { value: '-40%', label: 'Volume' }
+      ],
+      link: '/technology/e-platform'
+    },
+    {
+      id: 'charging',
+      title: 'Energy Management',
+      description: 'Intelligent energy optimization with regenerative braking and V2G capability. Smart grid integration.',
+      icon: <Zap size={48} style={{ color: '#6ec184', stroke: '#6ec184' }} />,
+      stats: [
+        { value: '90%', label: 'Energy Recovery' },
+        { value: 'V2G', label: 'Grid Support' },
+        { value: '+30%', label: 'City Range' }
+      ],
+      link: '/technology/energy-management'
+    }
+  ];
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -110,12 +107,10 @@ const AnimatedFeatures: React.FC = () => {
                   boxShadow: "0 20px 40px rgba(0,0,0,0.15)"
                 }}
                 transition={{ type: "spring", stiffness: 300 }}
-                style={{ cursor: 'pointer' }}  // ADDED
+                style={{ cursor: 'pointer' }}
               >
-                <div 
-                  className="feature-icon"
-                  style={{ color: feature.color }}
-                >
+                {/* NO BACKGROUND - JUST THE ICON */}
+                <div className="feature-icon">
                   {feature.icon}
                 </div>
                 
@@ -125,7 +120,7 @@ const AnimatedFeatures: React.FC = () => {
                 <div className="feature-stats">
                   {feature.stats.map((stat, i) => (
                     <div key={i} className="stat">
-                      <div className="stat-value" style={{ color: feature.color }}>
+                      <div className="stat-value" style={{ color: '#6ec184' }}>
                         {stat.value}
                       </div>
                       <div className="stat-label">{stat.label}</div>
@@ -133,12 +128,7 @@ const AnimatedFeatures: React.FC = () => {
                   ))}
                 </div>
                 
-                <div className="feature-link" style={{ 
-                  marginTop: '20px', 
-                  color: feature.color,
-                  fontSize: '14px',
-                  fontWeight: '500'
-                }}>
+                <div className="feature-link" style={{ color: '#6ec184' }}>
                   Learn More →
                 </div>
               </motion.div>

@@ -1,7 +1,12 @@
-/* src/components/AnimatedFeatures.css - NEW FILE */
+/* src/components/AnimatedFeatures.css - Consistent Green Theme */
+:root {
+  --tech-green: #6ec184;
+  /* NO BACKGROUND COLOR - icons only */
+}
+
 .animated-features-section {
   padding: 120px 48px;
-  background: var(--gray-light);
+  background: #f8f9fa;
   position: relative;
   overflow: hidden;
 }
@@ -41,28 +46,16 @@
   background: white;
   padding: 48px;
   border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
   transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   cursor: pointer;
   position: relative;
   overflow: hidden;
 }
 
-.feature-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--primary), var(--accent));
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.4s ease;
-}
-
-.feature-card:hover::before {
-  transform: scaleX(1);
+.feature-card:hover {
+  transform: scale(1.02) translateY(-5px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
 }
 
 .feature-icon {
@@ -72,8 +65,18 @@
   justify-content: center;
   width: 80px;
   height: 80px;
-  background: var(--surface);
-  border-radius: 16px;
+  /* NO BACKGROUND - icons only */
+}
+
+.icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--tech-green);
+}
+
+.icon-wrapper svg {
+  color: var(--tech-green);
 }
 
 .feature-title {
@@ -106,6 +109,7 @@
   font-size: 32px;
   font-weight: 100;
   margin-bottom: 8px;
+  color: var(--tech-green) !important;
 }
 
 .stat-label {
@@ -113,6 +117,13 @@
   color: #999;
   text-transform: uppercase;
   letter-spacing: 0.1em;
+}
+
+.feature-link {
+  margin-top: 20px;
+  color: var(--tech-green) !important;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 /* Sustainability Section */
@@ -177,6 +188,42 @@
   opacity: 0.9;
   text-transform: uppercase;
   letter-spacing: 0.1em;
+}
+
+/* Override any link styling */
+.features-grid a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.features-grid a:hover {
+  text-decoration: none;
+}
+
+/* Ensure consistent icon colors and sizing */
+.feature-card .lucide {
+  color: var(--tech-green) !important;
+  stroke: var(--tech-green) !important;
+  fill: none !important;
+  width: 48px !important;
+  height: 48px !important;
+}
+
+/* Additional specificity for icon color consistency */
+.feature-icon .icon-wrapper > * {
+  color: var(--tech-green) !important;
+  stroke: var(--tech-green) !important;
+}
+
+/* Ensure SVG paths inherit the color */
+.feature-icon svg path,
+.feature-icon svg line,
+.feature-icon svg circle,
+.feature-icon svg rect,
+.feature-icon svg polyline,
+.feature-icon svg polygon {
+  stroke: var(--tech-green) !important;
+  fill: none !important;
 }
 
 /* Mobile Responsive */
