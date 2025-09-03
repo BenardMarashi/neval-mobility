@@ -824,3 +824,223 @@ body {
   height: 100%;
   position: relative;
 }
+
+/* Add these styles to your existing CSS file */
+
+.footer-socials {
+  margin-top: 1.5rem;
+}
+
+.footer-socials h4 {
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.social-icons {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.social-link:hover {
+  opacity: 0.7;
+  transform: translateY(-2px);
+}
+
+.social-link svg {
+  display: block;
+}
+
+/* Footer Styles */
+.footer {
+  background-color: #000;
+  color: #fff;
+  padding: 3rem 0 1.5rem;
+  margin-top: auto;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3rem;
+  width: 100%;
+}
+
+.footer-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-column h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+.footer-column ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-column ul li {
+  margin-bottom: 0.75rem;
+}
+
+.footer-column ul li a {
+  color: #999;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.footer-column ul li a:hover {
+  color: #fff;
+}
+
+/* Social Media Section */
+.footer-socials {
+  margin-top: 2rem;
+}
+
+.footer-socials h4 {
+  margin-bottom: 0.75rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.social-icons {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.social-link:hover {
+  opacity: 0.7;
+  transform: translateY(-2px);
+}
+
+.social-link svg {
+  display: block;
+}
+
+/* Footer Main Content */
+.footer-main {
+  padding-bottom: 2rem;
+}
+
+/* Footer Bottom Section */
+.footer-bottom {
+  border-top: 1px solid #333;
+  padding-top: 1.5rem;
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.footer-copyright {
+  text-align: center;
+}
+
+.footer-copyright p {
+  color: #999;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* Admin Trigger - Keep it hidden but functional */
+.admin-trigger {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.admin-link-hidden {
+  background: transparent;
+  border: none;
+  color: transparent;
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.admin-link-hidden:hover {
+  opacity: 0.3;
+  color: #666;
+}
+
+.admin-controls {
+  display: flex;
+  gap: 1rem;
+}
+
+.admin-link {
+  background: transparent;
+  border: 1px solid #666;
+  color: #999;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+}
+
+.admin-link:hover {
+  border-color: #fff;
+  color: #fff;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .footer-column {
+    text-align: center;
+  }
+  
+  .social-icons {
+    justify-content: center;
+  }
+  
+  .footer-content {
+    padding: 0 1rem;
+  }
+  
+  .admin-trigger {
+    position: static;
+    transform: none;
+    margin-top: 1rem;
+  }
+}

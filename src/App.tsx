@@ -20,6 +20,7 @@ import RequestPricingPage from './pages/RequestPricingPage';
 import Fleet from './pages/Fleet';
 import AboutUs from './pages/AboutUs';
 import ContactUs from './pages/ContactUs';
+import { Instagram, Facebook, Linkedin } from 'lucide-react';
 
 // Lazy load admin dashboard
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
@@ -343,7 +344,8 @@ const AppContent: React.FC = () => {
 
           {/* Footer with Hidden Admin Access */}
           <footer className="footer">
-            <div className="footer-content">
+          <div className="footer-content">
+            <div className="footer-main">
               <div className="footer-grid">
                 <div className="footer-column">
                   <h4>Fleet</h4>
@@ -370,48 +372,85 @@ const AppContent: React.FC = () => {
                     <li><Link to="/request-pricing">Request Pricing</Link></li>
                     <li><Link to="/about">About</Link></li>
                   </ul>
-                </div>
-              </div>
-              
-              {/* Hidden Admin Section */}
-              <div className="footer-bottom">
-                <div className="footer-copyright">
-                  <p>&copy; 2025 Neval Mobility. All rights reserved.</p>
-                </div>
-                <div className="admin-trigger">
-                  {isAdmin ? (
-                    <div className="admin-controls">
-                      <button 
-                        onClick={() => navigate('/admin/dashboard')}
-                        className="admin-link"
+                  
+                  {/* Social Media Section */}
+                  <div className="footer-socials">
+                    <h4>Socials</h4>
+                    <div className="social-icons">
+                      <a
+                        href="https://www.instagram.com/nevalmobility"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="social-link"
+                        aria-label="Instagram"
                       >
-                        Admin Dashboard
-                      </button>
-                      <button 
-                        onClick={handleSignOut}
-                        className="admin-link"
+                        <Instagram size={20} color="white" />
+                      </a>
+                      <a
+                        href="https://www.facebook.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="social-link"
+                        aria-label="Facebook"
                       >
-                        Sign Out
-                      </button>
+                        <Facebook size={20} color="white" />
+                      </a>
+                      <a
+                        href="https://www.linkedin.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="social-link"
+                        aria-label="LinkedIn"
+                      >
+                        <Linkedin size={20} color="white" />
+                      </a>
                     </div>
-                  ) : (
-                    <button 
-                      onClick={() => setShowAdminLogin(true)}
-                      className="admin-link-hidden"
-                      aria-label="Admin Access"
-                    >
-                      •
-                    </button>
-                  )}
+                  </div>
                 </div>
               </div>
             </div>
             
-            {/* Admin Login Modal */}
-            {showAdminLogin && (
-              <AdminLogin onClose={() => setShowAdminLogin(false)} />
-            )}
-          </footer>
+            {/* Copyright and Admin Section - Now at the very bottom */}
+            <div className="footer-bottom">
+              <div className="footer-copyright">
+                <p>&copy; 2025 Neval Mobility. All rights reserved.</p>
+              </div>
+              
+              {/* Hidden Admin Trigger */}
+              <div className="admin-trigger">
+                {isAdmin ? (
+                  <div className="admin-controls">
+                    <button 
+                      onClick={() => navigate('/admin/dashboard')}
+                      className="admin-link"
+                    >
+                      Admin Dashboard
+                    </button>
+                    <button 
+                      onClick={handleSignOut}
+                      className="admin-link"
+                    >
+                      Sign Out
+                    </button>
+                  </div>
+                ) : (
+                  <button 
+                    onClick={() => setShowAdminLogin(true)}
+                    className="admin-link-hidden"
+                    aria-label="Admin Access"
+                  >
+                    •
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+          
+          {/* Admin Login Modal */}
+          {showAdminLogin && (
+            <AdminLogin onClose={() => setShowAdminLogin(false)} />
+          )}
+        </footer>
         </div>
       } />
       
