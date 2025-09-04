@@ -1,29 +1,113 @@
-// src/App.tsx - WITH CATEGORIES
+// src/App.tsx - WITH ADMIN LOGIN FIXED
 import React, { useState, useEffect, Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useSearchParams, Navigate } from 'react-router-dom';
 import './App.css';
+// HYPERSPEED LOADS FIRST - NOT LAZY LOADED
 import Hyperspeed from './components/HyperSpeed';
-import Carousel from './components/Carousel';
-import AnimatedFeatures from './components/AnimatedFeatures';
-import CategoryFilter from './components/CategoryFilter';
-import CarDetail from './pages/CarDetail';
 import { Car } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
-import AdminLogin from './components/AdminLogin';
-import ProtectedRoute from './components/ProtectedRoute';
 import { db, collection, getDocs, query, where, signOutAdmin } from './services/firebase';
-import { Car as CarType, CarCategory, CATEGORY_LABELS  } from './types/Car';
-import BladeBattery from './pages/technology/BladeBattery';
-import EPlatform from './pages/technology/EPlatform';
-import EnergyManagement from './pages/technology/EnergyManagement';
-import RequestPricingPage from './pages/RequestPricingPage';
-import Fleet from './pages/Fleet';
-import AboutUs from './pages/AboutUs';
-import ContactUs from './pages/ContactUs';
+import { Car as CarType, CarCategory, CATEGORY_LABELS } from './types/Car';
 import { Instagram, Facebook, Linkedin } from 'lucide-react';
-
-// Lazy load admin dashboard
+import CategoryFilter from './components/CategoryFilter';
+import './components/CategoryFilter.css';
+// Lazy load all non-critical components
+const Carousel = lazy(() => import('./components/Carousel'));
+const AnimatedFeatures = lazy(() => import('./components/AnimatedFeatures'));
+const CarDetail = lazy(() => import('./pages/CarDetail'));
+const AdminLogin = lazy(() => import('./components/AdminLogin'));
+const ProtectedRoute = lazy(() => import('./components/ProtectedRoute'));
+const BladeBattery = lazy(() => import('./pages/technology/BladeBattery'));
+const EPlatform = lazy(() => import('./pages/technology/EPlatform'));
+const EnergyManagement = lazy(() => import('./pages/technology/EnergyManagement'));
+const RequestPricingPage = lazy(() => import('./pages/RequestPricingPage'));
+const Fleet = lazy(() => import('./pages/Fleet'));
+const AboutUs = lazy(() => import('./pages/AboutUs'));
+const ContactUs = lazy(() => import('./pages/ContactUs'));
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
+
+// Loading component for Suspense fallback
+const LoadingSpinner: React.FC<{ message?: string }> = ({ message = 'Loading...' }) => (
+  <div style={{
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    minHeight: '200px',
+    color: '#666',
+    fontSize: '14px'
+  }}>
+    <div style={{ textAlign: 'center' }}>
+      <div style={{
+        width: '40px',
+        height: '40px',
+        border: '3px solid #f3f3f3',
+        borderTop: '3px solid #6ec184',
+        borderRadius: '50%',
+        animation: 'spin 1s linear infinite',
+        margin: '0 auto 10px'
+      }}></div>
+      {message}
+    </div>
+  </div>
+);
+
+// Add CSS for spinner animation
+const spinnerStyles = `
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+`;
+
+// Inject spinner styles
+if (typeof document !== 'undefined' && !document.getElementById('spinner-styles')) {
+  const style = document.createElement('style');
+  style.id = 'spinner-styles';
+  style.innerHTML = spinnerStyles;
+  document.head.appendChild(style);
+}
+
+// Admin Route Handler Component - handles /admin path
+const AdminRouteHandler: React.FC = () => {
+  const { isAdmin } = useAuth();
+  const navigate = useNavigate();
+  const [showLogin, setShowLogin] = useState(false);
+
+  useEffect(() => {
+    if (isAdmin) {
+      // If already logged in, redirect to dashboard
+      navigate('/admin/dashboard');
+    } else {
+      // Show login modal
+      setShowLogin(true);
+    }
+  }, [isAdmin, navigate]);
+
+  if (isAdmin) {
+    return <Navigate to="/admin/dashboard" replace />;
+  }
+
+  return (
+    <div style={{
+      minHeight: '100vh',
+      background: '#000',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }}>
+      {showLogin && (
+        <Suspense fallback={<LoadingSpinner />}>
+          <AdminLogin 
+            onClose={() => {
+              setShowLogin(false);
+              navigate('/');
+            }} 
+          />
+        </Suspense>
+      )}
+    </div>
+  );
+};
 
 // Default vehicles as fallback
 const DEFAULT_VEHICLES = [
@@ -212,18 +296,22 @@ const AppContent: React.FC = () => {
 
   return (
     <Routes>
+      {/* Admin Route - handles /admin path */}
+      <Route path="/admin" element={<AdminRouteHandler />} />
+      
+      {/* Main Home Route */}
       <Route path="/" element={
         <div className="app">
           {/* Navigation */}
           <nav className="nav-header">
             <div className="nav-content">
-                  <div className="logo">
-                      <img 
-                        src="/logo.jpg" 
-                        className="logo-img"
-                        loading="eager"
-                      />
-                    </div>
+              <div className="logo">
+                <img 
+                  src="/logo.jpg" 
+                  className="logo-img"
+                  loading="eager"
+                />
+              </div>
               <ul className="nav-links">
                 <li><a href="#fleet" onClick={(e) => { e.preventDefault(); scrollToSection('vehicles'); }}>Fleet</a></li>
                 <li><a href="#technology" onClick={(e) => { e.preventDefault(); scrollToSection('technology'); }}>Technology</a></li>
@@ -250,7 +338,7 @@ const AppContent: React.FC = () => {
             </div>
           )}
 
-          {/* Hero Section with Hyperspeed */}
+          {/* Hero Section with Hyperspeed - RENDERS IMMEDIATELY */}
           <section className="hero-section">
             <div className="hero-background">
               <Hyperspeed
@@ -279,7 +367,7 @@ const AppContent: React.FC = () => {
             <div className="hero-content">
               <div className="hero-inner">
                 <h1 className="hero-title">Neval<br/>Mobility</h1>
-                <p className="hero-subtitle">Next Electric Vehicle Alternative</p>
+                <p className="hero-subtitle">Next Electric Vehicle Alternative</p>
                 <div className="hero-buttons">
                   <button 
                     className="btn-primary"
@@ -292,7 +380,7 @@ const AppContent: React.FC = () => {
             </div>
           </section>
 
-          {/* Vehicle Carousel Section with Categories */}
+          {/* Vehicle Carousel Section with Categories - LAZY LOADED */}
           <section id="vehicles" className="vehicle-section">
             <div className="section-header">
               <h2 className="section-title">Our Fleet</h2>
@@ -305,7 +393,7 @@ const AppContent: React.FC = () => {
               </p>
             </div>
             
-            {/* Category Filter - Home page without ALL */}
+            {/* Category Filter */}
             <div className="category-filter">
               <div className="category-pills">
                 {(['ocean network', 'dynasty network', 'denza', 'leopard'] as CarCategory[]).map(category => (
@@ -321,14 +409,16 @@ const AppContent: React.FC = () => {
               </div>
             </div>
             
-            {/* Only render Carousel if we have vehicles */}
+            {/* Carousel with Suspense boundary */}
             {vehicles && vehicles.length > 0 ? (
-              <Carousel
-                items={vehicles}
-                onRequestPricing={(carId) => {
-                  navigate(`/request-pricing?car=${carId}`);
-                }}
-              />
+              <Suspense fallback={<LoadingSpinner message="Loading vehicles..." />}>
+                <Carousel
+                  items={vehicles}
+                  onRequestPricing={(carId) => {
+                    navigate(`/request-pricing?car=${carId}`);
+                  }}
+                />
+              </Suspense>
             ) : (
               <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
                 {loading ? 'Loading vehicles...' : 
@@ -339,135 +429,168 @@ const AppContent: React.FC = () => {
             )}
           </section>
 
-          {/* Technology & Features with Animated Cards */}
-          <AnimatedFeatures />
+          {/* Technology & Features with Animated Cards - LAZY LOADED */}
+          <Suspense fallback={<LoadingSpinner message="Loading features..." />}>
+            <AnimatedFeatures />
+          </Suspense>
 
-          {/* Footer with Hidden Admin Access */}
+          {/* FOOTER WITH FIXED ADMIN ACCESS */}
           <footer className="footer">
-          <div className="footer-content">
-            <div className="footer-main">
-              <div className="footer-grid">
-                <div className="footer-column">
-                  <h4>Fleet</h4>
-                  <ul>
-                    <li><Link to="/fleet">All Models</Link></li>
-                    <li><Link to="/fleet?category=ocean%20network">Ocean Network</Link></li>
-                    <li><Link to="/fleet?category=dynasty%20network">Dynasty Network</Link></li>
-                    <li><Link to="/fleet?category=denza">Denza</Link></li>
-                    <li><Link to="/fleet?category=leopard">Leopard</Link></li>
-                  </ul>
-                </div>
-                <div className="footer-column">
-                  <h4>Technology</h4>
-                  <ul>
-                    <li><Link to="/technology/blade-battery">Blade Battery</Link></li>
-                    <li><Link to="/technology/e-platform">e-Platform 3.0</Link></li>
-                    <li><Link to="/technology/energy-management">Energy Management</Link></li>
-                  </ul>
-                </div>
-                <div className="footer-column">
-                  <h4>Support</h4>
-                  <ul>
-                    <li><Link to="/contact">Contact Us</Link></li>
-                    <li><Link to="/request-pricing">Request Pricing</Link></li>
-                    <li><Link to="/about">About</Link></li>
-                  </ul>
-                  
-                  {/* Social Media Section */}
-                  <div className="footer-socials">
-                    <h4>Socials</h4>
-                    <div className="social-icons">
-                      <a
-                        href="https://www.instagram.com/nevalmobility"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="social-link"
-                        aria-label="Instagram"
-                      >
-                        <Instagram size={20} color="white" />
-                      </a>
-                      <a
-                        href="https://www.facebook.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="social-link"
-                        aria-label="Facebook"
-                      >
-                        <Facebook size={20} color="white" />
-                      </a>
-                      <a
-                        href="https://www.linkedin.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="social-link"
-                        aria-label="LinkedIn"
-                      >
-                        <Linkedin size={20} color="white" />
-                      </a>
+            <div className="footer-content">
+              <div className="footer-main">
+                <div className="footer-grid">
+                  <div className="footer-column">
+                    <h4>Fleet</h4>
+                    <ul>
+                      <li><Link to="/fleet">All Models</Link></li>
+                      <li><Link to="/fleet?category=ocean%20network">Ocean Network</Link></li>
+                      <li><Link to="/fleet?category=dynasty%20network">Dynasty Network</Link></li>
+                      <li><Link to="/fleet?category=denza">Denza</Link></li>
+                      <li><Link to="/fleet?category=leopard">Leopard</Link></li>
+                    </ul>
+                  </div>
+                  <div className="footer-column">
+                    <h4>Technology</h4>
+                    <ul>
+                      <li><Link to="/technology/blade-battery">Blade Battery</Link></li>
+                      <li><Link to="/technology/e-platform">e-Platform 3.0</Link></li>
+                      <li><Link to="/technology/energy-management">Energy Management</Link></li>
+                    </ul>
+                  </div>
+                  <div className="footer-column">
+                    <h4>Support</h4>
+                    <ul>
+                      <li><Link to="/contact">Contact Us</Link></li>
+                      <li><Link to="/request-pricing">Request Pricing</Link></li>
+                      <li><Link to="/about">About</Link></li>
+                    </ul>
+                    
+                    {/* Social Media Section */}
+                    <div className="footer-socials">
+                      <h4>Socials</h4>
+                      <div className="social-icons">
+                        <a
+                          href="https://www.instagram.com/nevalmobility"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="social-link"
+                          aria-label="Instagram"
+                        >
+                          <Instagram size={20} color="white" />
+                        </a>
+                        <a
+                          href="https://www.facebook.com"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="social-link"
+                          aria-label="Facebook"
+                        >
+                          <Facebook size={20} color="white" />
+                        </a>
+                        <a
+                          href="https://www.linkedin.com"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="social-link"
+                          aria-label="LinkedIn"
+                        >
+                          <Linkedin size={20} color="white" />
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
+              
+              {/* FIXED FOOTER BOTTOM WITH ADMIN ACCESS */}
+              <div className="footer-bottom">
+                <div className="footer-copyright">
+                  <p>&copy; 2025 Neval Mobility. All rights reserved.</p>
+                </div>
+              </div>
             </div>
             
-            {/* Copyright and Admin Section - Now at the very bottom */}
-            <div className="footer-bottom">
-              <div className="footer-copyright">
-                <p>&copy; 2025 Neval Mobility. All rights reserved.</p>
-              </div>
-              
-              {/* Hidden Admin Trigger */}
-              <div className="admin-trigger">
-                {isAdmin ? (
-                  <div className="admin-controls">
-                    <button 
-                      onClick={() => navigate('/admin/dashboard')}
-                      className="admin-link"
-                    >
-                      Admin Dashboard
-                    </button>
-                    <button 
-                      onClick={handleSignOut}
-                      className="admin-link"
-                    >
-                      Sign Out
-                    </button>
-                  </div>
-                ) : (
-                  <button 
-                    onClick={() => setShowAdminLogin(true)}
-                    className="admin-link-hidden"
-                    aria-label="Admin Access"
-                  >
-                    •
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-          
-          {/* Admin Login Modal */}
-          {showAdminLogin && (
-            <AdminLogin onClose={() => setShowAdminLogin(false)} />
-          )}
-        </footer>
+            {/* Admin Login Modal - Shows when clicking the dot */}
+            {showAdminLogin && (
+              <Suspense fallback={<LoadingSpinner />}>
+                <AdminLogin onClose={() => setShowAdminLogin(false)} />
+              </Suspense>
+            )}
+          </footer>
         </div>
       } />
       
-      {/* Car Detail Route */}
-      <Route path="/car/:carId" element={<CarDetail />} />
-      <Route path="/request-pricing" element={<RequestPricingPage />} />
-      <Route path="/fleet" element={<Fleet />} />
-      <Route path="/about" element={<AboutUs />} />
-      <Route path="/contact" element={<ContactUs />} />
-      <Route path="/technology/blade-battery" element={<BladeBattery />} />
-      <Route path="/technology/e-platform" element={<EPlatform />} />
-      <Route path="/technology/energy-management" element={<EnergyManagement />} />
-      {/* Admin Routes */}
+      {/* All Other Routes with Lazy Loading */}
+      <Route 
+        path="/car/:carId" 
+        element={
+          <Suspense fallback={<LoadingSpinner message="Loading car details..." />}>
+            <CarDetail />
+          </Suspense>
+        } 
+      />
+      <Route 
+        path="/request-pricing" 
+        element={
+          <Suspense fallback={<LoadingSpinner message="Loading pricing form..." />}>
+            <RequestPricingPage />
+          </Suspense>
+        } 
+      />
+      <Route 
+        path="/fleet" 
+        element={
+          <Suspense fallback={<LoadingSpinner message="Loading fleet..." />}>
+            <Fleet />
+          </Suspense>
+        } 
+      />
+      <Route 
+        path="/about" 
+        element={
+          <Suspense fallback={<LoadingSpinner message="Loading about..." />}>
+            <AboutUs />
+          </Suspense>
+        } 
+      />
+      <Route 
+        path="/contact" 
+        element={
+          <Suspense fallback={<LoadingSpinner message="Loading contact..." />}>
+            <ContactUs />
+          </Suspense>
+        } 
+      />
+      <Route 
+        path="/technology/blade-battery" 
+        element={
+          <Suspense fallback={<LoadingSpinner message="Loading technology..." />}>
+            <BladeBattery />
+          </Suspense>
+        } 
+      />
+      <Route 
+        path="/technology/e-platform" 
+        element={
+          <Suspense fallback={<LoadingSpinner message="Loading technology..." />}>
+            <EPlatform />
+          </Suspense>
+        } 
+      />
+      <Route 
+        path="/technology/energy-management" 
+        element={
+          <Suspense fallback={<LoadingSpinner message="Loading technology..." />}>
+            <EnergyManagement />
+          </Suspense>
+        } 
+      />
+      
+      {/* Admin Dashboard Route */}
       <Route 
         path="/admin/dashboard" 
         element={
-          <Suspense fallback={<div className="loading">Loading admin dashboard...</div>}>
+          <Suspense fallback={<LoadingSpinner message="Loading admin dashboard..." />}>
             <ProtectedRoute>
               <AdminDashboard />
             </ProtectedRoute>

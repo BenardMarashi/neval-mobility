@@ -121,6 +121,36 @@ const CarDetail: React.FC = () => {
           <p className="car-description">{car.description}</p>
         </div>
       </section>
+
+      {/* Editions Section - Add this after the Overview section */}
+      {car.features && car.features.length > 0 && (
+        <section className="editions-section">
+          <h2 className="editions-title">Available Editions</h2>
+          <div className="editions-grid">
+            {car.features.map((edition, index) => {
+              // Parse edition name to extract type
+              const isSmartDrive = edition.toLowerCase().includes('smart drive');
+              const is4WD = edition.includes('4WD');
+              const isPro = edition.toLowerCase().includes('pro');
+              const isMax = edition.toLowerCase().includes('max');
+              const isUltra = edition.toLowerCase().includes('ultra');
+              
+              
+              return (
+                <div key={index} className="edition-card">
+                  <h3 className="edition-name">{edition}</h3>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
+      {/* Footer */}
+      <footer className="fleet-footer">
+        <div className="fleet-footer-content">
+          <p>&copy; 2025 Neval Mobility. All rights reserved.</p>
+        </div>
+      </footer>
     </div>
   );
 };

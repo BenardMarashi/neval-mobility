@@ -483,3 +483,131 @@
     font-size: 14px;
   }
 }
+
+/* Editions Section */
+.editions-section {
+  margin: 30px 0 80px 0;  /* Added 80px bottom margin */
+  padding: 0 50px;  /* Match the description-section padding */
+}
+
+.editions-title {
+  font-size: 36px;  /* Match Overview h2 size */
+  font-weight: 300;
+  color: #000;
+  margin-bottom: 32px;  /* Match Overview h2 margin */
+  text-align: left;
+  letter-spacing: -1px;  /* Match Overview h2 letter-spacing */
+  max-width: 1200px;  /* Same container width as description */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.editions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  max-width: 1200px;  /* This should already be there */
+  margin: 0 auto;
+}
+
+.edition-card {
+  background: linear-gradient(135deg, rgba(110, 193, 132, 0.05) 0%, rgba(5, 96, 6, 0.05) 100%);
+  border: 1px solid rgba(110, 193, 132, 0.2);
+  border-radius: 16px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.edition-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #056006, #6ec184);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+  transform-origin: left;
+}
+
+.edition-card:hover::before {
+  transform: scaleX(1);
+}
+
+.edition-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(5, 96, 6, 0.15);
+  border-color: #6ec184;
+  background: linear-gradient(135deg, rgba(110, 193, 132, 0.1) 0%, rgba(5, 96, 6, 0.1) 100%);
+}
+
+.edition-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  background: rgba(110, 193, 132, 0.1);
+  border: 1px solid rgba(110, 193, 132, 0.3);
+  border-radius: 20px;
+  font-size: 0.75rem;
+  color: #6ec184;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.edition-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.edition-type {
+  font-size: 0.9rem;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.edition-icon {
+  width: 20px;
+  height: 20px;
+  fill: #6ec184;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .editions-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .editions-title {
+    font-size: 2rem;
+  }
+}
+
+/* Footer Styles */
+.fleet-footer {
+  background: #000;
+  color: white;
+  padding: 40px 20px;
+  margin-top: 80px;
+}
+
+.fleet-footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.fleet-footer-content p {
+  margin: 0;
+  font-size: 14px;
+  color: #999;
+}

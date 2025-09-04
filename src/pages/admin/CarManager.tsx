@@ -220,84 +220,6 @@ const CarManager: React.FC<CarManagerProps> = ({ cars, onDelete, onToggleActive 
                 </div>
                 
                 <div className="form-group">
-                  <label>Price*</label>
-                  <input
-                    type="text"
-                    value={formData.price}
-                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                    placeholder="e.g., $65,000"
-                    required
-                  />
-                </div>
-                
-                <div className="form-group">
-                  <label>Range*</label>
-                  <input
-                    type="text"
-                    value={formData.range}
-                    onChange={(e) => setFormData({ ...formData, range: e.target.value })}
-                    placeholder="e.g., 700km"
-                    required
-                  />
-                </div>
-                
-                <div className="form-group">
-                  <label>0-100 km/h*</label>
-                  <input
-                    type="text"
-                    value={formData.acceleration}
-                    onChange={(e) => setFormData({ ...formData, acceleration: e.target.value })}
-                    placeholder="e.g., 3.8s"
-                    required
-                  />
-                </div>
-                
-                <div className="form-group">
-                  <label>Top Speed*</label>
-                  <input
-                    type="text"
-                    value={formData.topSpeed}
-                    onChange={(e) => setFormData({ ...formData, topSpeed: e.target.value })}
-                    placeholder="e.g., 180 km/h"
-                    required
-                  />
-                </div>
-                
-                <div className="form-group">
-                  <label>Battery*</label>
-                  <input
-                    type="text"
-                    value={formData.battery}
-                    onChange={(e) => setFormData({ ...formData, battery: e.target.value })}
-                    placeholder="e.g., 82.5 kWh"
-                    required
-                  />
-                </div>
-                
-                <div className="form-group">
-                  <label>Charging*</label>
-                  <input
-                    type="text"
-                    value={formData.charging}
-                    onChange={(e) => setFormData({ ...formData, charging: e.target.value })}
-                    placeholder="e.g., 10-80% in 26 min"
-                    required
-                  />
-                </div>
-                
-                <div className="form-group">
-                  <label>Seats*</label>
-                  <input
-                    type="number"
-                    value={formData.seats}
-                    onChange={(e) => setFormData({ ...formData, seats: parseInt(e.target.value) })}
-                    min="2"
-                    max="9"
-                    required
-                  />
-                </div>
-                
-                <div className="form-group">
                   <label>Published</label>
                   <select
                     value={formData.published ? 'true' : 'false'}
@@ -320,7 +242,7 @@ const CarManager: React.FC<CarManagerProps> = ({ cars, onDelete, onToggleActive 
               </div>
               
               <div className="form-group">
-                <label>Features</label>
+                <label>Editions</label>
                 <div className="input-with-button">
                   <input
                     type="text"

@@ -79,7 +79,7 @@ body {
 /* Mobile responsive */
 @media (max-width: 768px) {
   .logo-img {
-    height: 32px;
+    height: 38px;
   }
 }
 
@@ -1044,3 +1044,4 @@ body {
     margin-top: 1rem;
   }
 }
+
