@@ -204,7 +204,7 @@ const RequestPricingPage: React.FC = () => {
                   value={formData.phone}
                   onChange={handleChange}
                   required
-                  placeholder="+43 123 456 7890"
+                  placeholder="+355 123 456 7890"
                   className="glass-input"
                 />
               </div>
