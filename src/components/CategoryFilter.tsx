@@ -1,6 +1,6 @@
-// src/components/CategoryFilter.tsx - COMPLETE REPLACEMENT
 import React from 'react';
 import { CarCategory, CATEGORY_LABELS } from '../types/Car';
+import { useLanguage } from '../contexts/LanguageContext'; // ADD THIS
 import './CategoryFilter.css';
 
 interface CategoryFilterProps {
@@ -14,6 +14,8 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
   onCategoryChange,
   counts
 }) => {
+  const { t } = useLanguage(); // ADD THIS
+  
   const categories: (CarCategory | 'all')[] = [
     'all',
     'ocean network',
@@ -22,9 +24,8 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
     'leopard'
   ];
 
-
   const getCategoryDisplay = (cat: CarCategory | 'all'): string => {
-    if (cat === 'all') return 'All Models';
+    if (cat === 'all') return t('All Models');
     return CATEGORY_LABELS[cat as CarCategory];
   };
 

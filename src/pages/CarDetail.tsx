@@ -3,11 +3,13 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { db, doc, getDoc } from '../services/firebase';
 import { Car } from '../types/Car';
+import { useLanguage } from '../contexts/LanguageContext';
 import './CarDetail.css';
 
 const CarDetail: React.FC = () => {
   const { carId } = useParams<{ carId: string }>();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [car, setCar] = useState<Car | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -50,8 +52,8 @@ const CarDetail: React.FC = () => {
   if (!car) {
     return (
       <div className="detail-error-minimal">
-        <h2>Vehicle not found</h2>
-        <Link to="/" className="error-back-btn-minimal">Back to Fleet</Link>
+        <h2>{t('Vehicle not found')}</h2>
+        <Link to="/" className="error-back-btn-minimal">{t('Back to Fleet')}</Link>
       </div>
     );
   }
@@ -70,7 +72,7 @@ const CarDetail: React.FC = () => {
           className="request-pricing-header-btn" 
           onClick={() => navigate('/request-pricing?car=' + car.id)}
         >
-          Request Pricing
+          {t('Request Pricing')}
         </button>
       </header>
 
@@ -87,7 +89,7 @@ const CarDetail: React.FC = () => {
                 className="hero-car-image-autofit"
               />
             ) : (
-              <div className="no-image-placeholder">No image available</div>
+              <div className="no-image-placeholder">{t('No image available')}</div>
             )}
           </div>
         </div>
@@ -100,9 +102,9 @@ const CarDetail: React.FC = () => {
                 key={index}
                 className={`thumbnail ${index === currentImageIndex ? 'active' : ''}`}
                 onClick={() => selectImage(index)}
-                aria-label={`View image ${index + 1}`}
+                aria-label={`${t('View image')} ${index + 1}`}
               >
-                <img src={image} alt={`View ${index + 1}`} />
+                <img src={image} alt={`${t('View')} ${index + 1}`} />
               </button>
             ))}
           </div>
@@ -117,7 +119,7 @@ const CarDetail: React.FC = () => {
       {/* Description Section with Single CTA */}
       <section className="description-section-minimal">
         <div className="description-container">
-          <h2>Overview</h2>
+          <h2>{t('Overview')}</h2>
           <p className="car-description">{car.description}</p>
         </div>
       </section>
@@ -125,7 +127,7 @@ const CarDetail: React.FC = () => {
       {/* Editions Section - Add this after the Overview section */}
       {car.features && car.features.length > 0 && (
         <section className="editions-section">
-          <h2 className="editions-title">Available Editions</h2>
+          <h2 className="editions-title">{t('Available Editions')}</h2>
           <div className="editions-grid">
             {car.features.map((edition, index) => {
               // Parse edition name to extract type
@@ -148,7 +150,7 @@ const CarDetail: React.FC = () => {
       {/* Footer */}
       <footer className="fleet-footer">
         <div className="fleet-footer-content">
-          <p>&copy; 2025 Neval Mobility. All rights reserved.</p>
+          <p>&copy; 2025 Neval Mobility. {t('All rights reserved')}.</p>
         </div>
       </footer>
     </div>

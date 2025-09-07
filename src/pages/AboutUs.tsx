@@ -3,31 +3,33 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ChevronRight, Leaf, TrendingUp, Users, Globe } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 import './AboutUs.css';
 
 const AboutUs: React.FC = () => {
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const values = [
     {
       icon: <Leaf size={32} />,
-      title: 'Sustainability',
-      description: 'Every vehicle represents our commitment to cleaner air and a greener future.'
+      title: t('Sustainability'),
+      description: t('Every vehicle represents our commitment to cleaner air and a greener future.')
     },
     {
       icon: <TrendingUp size={32} />,
-      title: 'Accessibility',
-      description: 'Making electric mobility accessible through competitive pricing and direct ordering.'
+      title: t('Accessibility'),
+      description: t('Making electric mobility accessible through competitive pricing and direct ordering.')
     },
     {
       icon: <Users size={32} />,
-      title: 'Customer Focus',
-      description: 'From individual drivers to large corporations, we ensure everyone gets exactly what they need.'
+      title: t('Customer Focus'),
+      description: t('From individual drivers to large corporations, we ensure everyone gets exactly what they need.')
     },
     {
       icon: <Globe size={32} />,
-      title: 'Vision',
-      description: 'Accelerating sustainable mobility in Albania and beyond, making EVs the standard.'
+      title: t('Vision'),
+      description: t('Accelerating sustainable mobility in Albania and beyond, making EVs the standard.')
     }
   ];
 
@@ -40,16 +42,16 @@ const AboutUs: React.FC = () => {
             <img src="/logo.jpg" alt="NEVAL" className="logo-img" />
           </Link>
           <ul className="nav-links">
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/fleet">Fleet</Link></li>
-            <li><Link to="/technology/blade-battery">Technology</Link></li>
-            <li><Link to="/about" className="active">About</Link></li>
+            <li><Link to="/">{t('Home')}</Link></li>
+            <li><Link to="/fleet">{t('Fleet')}</Link></li>
+            <li><Link to="/technology/blade-battery">{t('Technology')}</Link></li>
+            <li><Link to="/about" className="active">{t('About')}</Link></li>
           </ul>
           <button 
             className="nav-cta"
             onClick={() => navigate('/request-pricing')}
           >
-            Request Pricing
+            {t('Request Pricing')}
           </button>
         </nav>
       </header>
@@ -63,10 +65,10 @@ const AboutUs: React.FC = () => {
           transition={{ duration: 0.6 }}
         >
           <h1 className="about-hero-title">
-            About <span className="highlight">NEVAL</span>
+            {t('About')} <span className="highlight">NEVAL</span>
           </h1>
           <p className="about-hero-subtitle">
-            Next Electric Vehicle Alternative
+            {t('Next Electric Vehicle Alternative')}
           </p>
         </motion.div>
       </section>
@@ -81,10 +83,9 @@ const AboutUs: React.FC = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2>Mobility in a New Light</h2>
+            <h2>{t('Mobility in a New Light')}</h2>
             <p className="lead-text">
-              At NEVAL, we see mobility in a new light. Our name — <strong>Next Electric Vehicle Alternative</strong> — 
-              captures our vision of offering customers a smarter, greener, and more accessible way to drive.
+              {t('At NEVAL, we see mobility in a new light. Our name — Next Electric Vehicle Alternative — captures our vision of offering customers a smarter, greener, and more accessible way to drive.')}
             </p>
           </motion.div>
 
@@ -95,11 +96,9 @@ const AboutUs: React.FC = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            <h3>Our Approach</h3>
+            <h3>{t('Our Approach')}</h3>
             <p>
-              We bring BYD electric vehicles to the market through a direct order-based model, 
-              ensuring that every client — from individual drivers to large corporations — 
-              receives exactly the car they need at a highly competitive price.
+              {t('We bring BYD electric vehicles to the market through a direct order-based model, ensuring that every client — from individual drivers to large corporations — receives exactly the car they need at a highly competitive price.')}
             </p>
           </motion.div>
 
@@ -110,11 +109,9 @@ const AboutUs: React.FC = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <h2>Our Mission</h2>
+            <h2>{t('Our Mission')}</h2>
             <p className="mission-text">
-              To accelerate sustainable mobility in Albania and beyond. Every vehicle we deliver 
-              represents more than transportation — it's a commitment to cleaner air, lower costs, 
-              and a future where electric driving becomes the standard.
+              {t('To accelerate sustainable mobility in Albania and beyond. Every vehicle we deliver represents more than transportation — it\'s a commitment to cleaner air, lower costs, and a future where electric driving becomes the standard.')}
             </p>
           </motion.div>
         </div>
@@ -130,7 +127,7 @@ const AboutUs: React.FC = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            Our Core Values
+            {t('Our Core Values')}
           </motion.h2>
           
           <div className="values-grid">
@@ -162,42 +159,32 @@ const AboutUs: React.FC = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2>Ready to Embrace the Future?</h2>
+          <h2>{t('Ready to Embrace the Future?')}</h2>
           <p>
-            Whether you're choosing your first EV or expanding a corporate fleet, 
-            NEVAL makes it seamless to order, own, and embrace the future of mobility.
+            {t('Whether you\'re choosing your first EV or expanding a corporate fleet, NEVAL makes it seamless to order, own, and embrace the future of mobility.')}
           </p>
           <div className="cta-buttons">
             <button 
               className="btn-primary"
               onClick={() => navigate('/fleet')}
             >
-              Explore Our Fleet
+              {t('Explore Our Fleet')}
               <ChevronRight size={20} />
             </button>
             <button 
               className="btn-secondary"
               onClick={() => navigate('/request-pricing')}
             >
-              Request Pricing
+              {t('Request Pricing')}
             </button>
           </div>
         </motion.div>
       </section>
 
       {/* Footer */}
-      <footer className="about-footer">
-        <div className="footer-content">
-          <div className="footer-info">
-            <p>Next Electric Vehicle Alternative</p>
-            <p className="copyright">© 2025 NEVAL Mobility. All rights reserved.</p>
-          </div>
-          <div className="footer-links">
-            <Link to="/">Home</Link>
-            <Link to="/fleet">Fleet</Link>
-            <Link to="/technology/blade-battery">Technology</Link>
-            <Link to="/request-pricing">Contact</Link>
-          </div>
+      <footer className="fleet-footer">
+        <div className="fleet-footer-content">
+          <p>&copy; 2025 Neval Mobility. {t('All rights reserved')}.</p>
         </div>
       </footer>
     </div>

@@ -3,10 +3,12 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Phone, Mail, MapPin, Clock, Send, MessageSquare } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 import './ContactUs.css';
 
 const ContactUs: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -47,31 +49,31 @@ const ContactUs: React.FC = () => {
   const contactInfo = [
     {
       icon: <Mail size={24} />,
-      title: 'Email',
+      title: t('Email'),
       detail: 'info@nevalmobility.com',
       link: 'mailto:info@nevalmobility.com'
     },
     {
       icon: <Phone size={24} />,
-      title: 'Phone',
+      title: t('Phone'),
       detail: '+355 68 906 1430',
       link: 'tel:+355689061430'
     },
     {
       icon: <MapPin size={24} />,
-      title: 'Location',
+      title: t('Location'),
       detail: 'Tirana, Albania',
       link: null
     },
     {
       icon: <Clock size={24} />,
-      title: 'Business Hours',
-      detail: 'Mon - Fri: 9:00 AM - 6:00 PM',
+      title: t('Business Hours'),
+      detail: t('Mon - Fri: 9:00 AM - 6:00 PM'),
       link: null
     }
   ];
 
-  return (
+return (
     <div className="contact-page">
       {/* Header - Same as About */}
       <header className="contact-header">
@@ -80,17 +82,17 @@ const ContactUs: React.FC = () => {
             <img src="/logo.jpg" alt="NEVAL" className="logo-img" />
           </Link>
           <ul className="nav-links">
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/fleet">Fleet</Link></li>
-            <li><Link to="/technology/blade-battery">Technology</Link></li>
-            <li><Link to="/about">About</Link></li>
-            <li><Link to="/contact" className="active">Contact</Link></li>
+            <li><Link to="/">{t('Home')}</Link></li>
+            <li><Link to="/fleet">{t('Fleet')}</Link></li>
+            <li><Link to="/technology/blade-battery">{t('Technology')}</Link></li>
+            <li><Link to="/about">{t('About')}</Link></li>
+            <li><Link to="/contact" className="active">{t('Contact')}</Link></li>
           </ul>
           <button 
             className="nav-cta"
             onClick={() => navigate('/request-pricing')}
           >
-            Request Pricing
+            {t('Request Pricing')}
           </button>
         </nav>
       </header>
@@ -104,10 +106,10 @@ const ContactUs: React.FC = () => {
           transition={{ duration: 0.6 }}
         >
           <h1 className="contact-hero-title">
-            Get in <span className="highlight">Touch</span>
+            {t('Get in')} <span className="highlight">{t('Touch')}</span>
           </h1>
           <p className="contact-hero-subtitle">
-            We're here to help you drive into the future
+            {t('We\'re here to help you drive into the future')}
           </p>
         </motion.div>
       </section>
@@ -160,9 +162,8 @@ const ContactUs: React.FC = () => {
             transition={{ duration: 0.6 }}
           >
             <div className="form-header-text">
-              <h2>Send Us a Message</h2>
-              <p>Have questions about our electric vehicles? Want to schedule a test drive? 
-                 We'd love to hear from you. Fill out the form below and we'll get back to you within 24 hours.</p>
+              <h2>{t('Send Us a Message')}</h2>
+              <p>{t('Have questions about our electric vehicles? Want to schedule a test drive? We\'d love to hear from you. Fill out the form below and we\'ll get back to you within 24 hours.')}</p>
             </div>
 
             {success && (
@@ -172,14 +173,14 @@ const ContactUs: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
               >
                 <MessageSquare size={20} />
-                Message sent successfully! We'll get back to you soon.
+                {t('Message sent successfully! We\'ll get back to you soon.')}
               </motion.div>
             )}
 
             <form onSubmit={handleSubmit} className="contact-form">
               <div className="form-row">
                 <div className="form-group">
-                  <label htmlFor="name">Full Name *</label>
+                  <label htmlFor="name">{t('Full Name')} *</label>
                   <input
                     type="text"
                     id="name"
@@ -192,7 +193,7 @@ const ContactUs: React.FC = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="email">Email Address *</label>
+                  <label htmlFor="email">{t('Email Address')} *</label>
                   <input
                     type="email"
                     id="email"
@@ -208,7 +209,7 @@ const ContactUs: React.FC = () => {
 
               <div className="form-row">
                 <div className="form-group">
-                  <label htmlFor="phone">Phone Number</label>
+                  <label htmlFor="phone">{t('Phone Number')}</label>
                   <input
                     type="tel"
                     id="phone"
@@ -220,7 +221,7 @@ const ContactUs: React.FC = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="subject">Subject *</label>
+                  <label htmlFor="subject">{t('Subject')} *</label>
                   <select
                     id="subject"
                     name="subject"
@@ -229,18 +230,18 @@ const ContactUs: React.FC = () => {
                     required
                     className="form-input"
                   >
-                    <option value="">Select a subject</option>
-                    <option value="test-drive">Schedule Test Drive</option>
-                    <option value="pricing">Pricing Information</option>
-                    <option value="fleet">Fleet Sales</option>
-                    <option value="technical">Technical Support</option>
-                    <option value="general">General Inquiry</option>
+                    <option value="">{t('Select a subject')}</option>
+                    <option value="test-drive">{t('Schedule Test Drive')}</option>
+                    <option value="pricing">{t('Pricing Information')}</option>
+                    <option value="fleet">{t('Fleet Sales')}</option>
+                    <option value="technical">{t('Technical Support')}</option>
+                    <option value="general">{t('General Inquiry')}</option>
                   </select>
                 </div>
               </div>
 
               <div className="form-group full-width">
-                <label htmlFor="message">Message *</label>
+                <label htmlFor="message">{t('Message')} *</label>
                 <textarea
                   id="message"
                   name="message"
@@ -248,7 +249,7 @@ const ContactUs: React.FC = () => {
                   onChange={handleChange}
                   required
                   rows={6}
-                  placeholder="Tell us how we can help you..."
+                  placeholder={t('Tell us how we can help you...')}
                   className="form-input"
                 />
               </div>
@@ -259,10 +260,10 @@ const ContactUs: React.FC = () => {
                 disabled={loading}
               >
                 {loading ? (
-                  'Sending...'
+                  t('Sending...')
                 ) : (
                   <>
-                    Send Message
+                    {t('Send Message')}
                     <Send size={18} />
                   </>
                 )}
@@ -281,41 +282,31 @@ const ContactUs: React.FC = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2>Ready to Experience Electric?</h2>
+          <h2>{t('Ready to Experience Electric?')}</h2>
           <p>
-            Schedule a test drive today and discover the perfect electric vehicle for your needs
+            {t('Schedule a test drive today and discover the perfect electric vehicle for your needs')}
           </p>
           <div className="cta-buttons">
             <button 
               className="btn-primary"
               onClick={() => navigate('/fleet')}
             >
-              View Our Fleet
+              {t('View Our Fleet')}
             </button>
             <button 
               className="btn-secondary"
               onClick={() => navigate('/request-pricing')}
             >
-              Request Pricing
+              {t('Request Pricing')}
             </button>
           </div>
         </motion.div>
       </section>
 
       {/* Footer - Same as About */}
-      <footer className="contact-footer">
-        <div className="footer-content">
-          <div className="footer-info">
-            <p>Next Electric Vehicle Alternative</p>
-            <p className="copyright">© 2025 NEVAL Mobility. All rights reserved.</p>
-          </div>
-          <div className="footer-links">
-            <Link to="/">Home</Link>
-            <Link to="/fleet">Fleet</Link>
-            <Link to="/technology/blade-battery">Technology</Link>
-            <Link to="/about">About</Link>
-            <Link to="/request-pricing">Pricing</Link>
-          </div>
+      <footer className="fleet-footer">
+        <div className="fleet-footer-content">
+          <p>&copy; 2025 Neval Mobility. {t('All rights reserved')}.</p>
         </div>
       </footer>
     </div>

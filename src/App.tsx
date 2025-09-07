@@ -6,6 +6,7 @@ import './App.css';
 import Hyperspeed from './components/HyperSpeed';
 import { Car } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { LanguageProvider, useLanguage } from './contexts/LanguageContext'; // ADD THIS IMPORT
 import { db, collection, getDocs, query, where, signOutAdmin } from './services/firebase';
 import { Car as CarType, CarCategory, CATEGORY_LABELS } from './types/Car';
 import { Instagram, Facebook, Linkedin } from 'lucide-react';
@@ -26,30 +27,42 @@ const AboutUs = lazy(() => import('./pages/AboutUs'));
 const ContactUs = lazy(() => import('./pages/ContactUs'));
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
 
-// Loading component for Suspense fallback
-const LoadingSpinner: React.FC<{ message?: string }> = ({ message = 'Loading...' }) => (
-  <div style={{
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    minHeight: '200px',
-    color: '#666',
-    fontSize: '14px'
-  }}>
-    <div style={{ textAlign: 'center' }}>
-      <div style={{
-        width: '40px',
-        height: '40px',
-        border: '3px solid #f3f3f3',
-        borderTop: '3px solid #6ec184',
-        borderRadius: '50%',
-        animation: 'spin 1s linear infinite',
-        margin: '0 auto 10px'
-      }}></div>
-      {message}
+// Loading component for Suspense fallback - WRAPPED FOR TRANSLATION
+const LoadingSpinnerComponent: React.FC<{ message?: string }> = ({ message = 'Loading...' }) => {
+  const { t } = useLanguage();
+  return (
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      minHeight: '200px',
+      color: '#666',
+      fontSize: '14px'
+    }}>
+      <div style={{ textAlign: 'center' }}>
+        <div style={{
+          width: '40px',
+          height: '40px',
+          border: '3px solid #f3f3f3',
+          borderTop: '3px solid #6ec184',
+          borderRadius: '50%',
+          animation: 'spin 1s linear infinite',
+          margin: '0 auto 10px'
+        }}></div>
+        {t(message)}
+      </div>
     </div>
-  </div>
-);
+  );
+};
+
+// Wrapper for LoadingSpinner that handles translation context
+const LoadingSpinner: React.FC<{ message?: string }> = ({ message = 'Loading...' }) => {
+  return (
+    <LanguageProvider>
+      <LoadingSpinnerComponent message={message} />
+    </LanguageProvider>
+  );
+};
 
 // Add CSS for spinner animation
 const spinnerStyles = `
@@ -109,54 +122,9 @@ const AdminRouteHandler: React.FC = () => {
   );
 };
 
-// Default vehicles as fallback
-const DEFAULT_VEHICLES = [
-  {
-    id: 'seal',
-    title: "BYD Seal",
-    description: "Premium electric sedan. 700km range. From $65,000",
-    link: "/car/seal",
-    icon: <Car className="h-4 w-4 text-white" />,
-    category: 'ocean network' as CarCategory
-  },
-  {
-    id: 'atto3',
-    title: "BYD Atto 3",
-    description: "Compact SUV. 420km range. From $48,000",
-    link: "/car/atto3",
-    icon: <Car className="h-4 w-4 text-white" />,
-    category: 'dynasty network' as CarCategory
-  },
-  {
-    id: 'tang',
-    title: "BYD Tang",
-    description: "7-seater SUV. 500km range. From $72,000",
-    link: "/car/tang",
-    icon: <Car className="h-4 w-4 text-white" />,
-    category: 'dynasty network' as CarCategory
-  },
-  {
-    id: 'dolphin',
-    title: "BYD Dolphin",
-    description: "City car. 405km range. From $35,000",
-    link: "/car/dolphin",
-    icon: <Car className="h-4 w-4 text-white" />,
-    category: 'ocean network' as CarCategory
-  },
-  {
-    id: 'han',
-    title: "BYD Han",
-    description: "Executive sedan. 605km range. From $78,000",
-    link: "/car/han",
-    icon: <Car className="h-4 w-4 text-white" />,
-    category: 'dynasty network' as CarCategory
-  },
-];
-
 const AppContent: React.FC = () => {
+  const { t, language, setLanguage } = useLanguage(); // ADD THIS
   const [searchParams, setSearchParams] = useSearchParams();
-  const [vehicles, setVehicles] = useState<any[]>(DEFAULT_VEHICLES);
-  const [allVehicles, setAllVehicles] = useState<any[]>(DEFAULT_VEHICLES);
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [loading, setLoading] = useState(true);
   const [firebaseConnected, setFirebaseConnected] = useState(false);
@@ -173,6 +141,53 @@ const AppContent: React.FC = () => {
   
   const { isAdmin } = useAuth();
   const navigate = useNavigate();
+
+  // Default vehicles with translation
+  const DEFAULT_VEHICLES = [
+    {
+      id: 'seal',
+      title: "BYD Seal",
+      description: t('Premium electric sedan') + '. 700km ' + t('range') + '. ' + t('From') + ' $65,000',
+      link: "/car/seal",
+      icon: <Car className="h-4 w-4 text-white" />,
+      category: 'ocean network' as CarCategory
+    },
+    {
+      id: 'atto3',
+      title: "BYD Atto 3",
+      description: t('Compact SUV') + '. 420km ' + t('range') + '. ' + t('From') + ' $48,000',
+      link: "/car/atto3",
+      icon: <Car className="h-4 w-4 text-white" />,
+      category: 'dynasty network' as CarCategory
+    },
+    {
+      id: 'tang',
+      title: "BYD Tang",
+      description: t('7-seater SUV') + '. 500km ' + t('range') + '. ' + t('From') + ' $72,000',
+      link: "/car/tang",
+      icon: <Car className="h-4 w-4 text-white" />,
+      category: 'dynasty network' as CarCategory
+    },
+    {
+      id: 'dolphin',
+      title: "BYD Dolphin",
+      description: t('City car') + '. 405km ' + t('range') + '. ' + t('From') + ' $35,000',
+      link: "/car/dolphin",
+      icon: <Car className="h-4 w-4 text-white" />,
+      category: 'ocean network' as CarCategory
+    },
+    {
+      id: 'han',
+      title: "BYD Han",
+      description: t('Executive sedan') + '. 605km ' + t('range') + '. ' + t('From') + ' $78,000',
+      link: "/car/han",
+      icon: <Car className="h-4 w-4 text-white" />,
+      category: 'dynasty network' as CarCategory
+    },
+  ];
+
+  const [vehicles, setVehicles] = useState<any[]>(DEFAULT_VEHICLES);
+  const [allVehicles, setAllVehicles] = useState<any[]>(DEFAULT_VEHICLES);
 
   // Load cars from Firestore
   useEffect(() => {
@@ -313,11 +328,11 @@ const AppContent: React.FC = () => {
                 />
               </div>
               <ul className="nav-links">
-                <li><a href="#fleet" onClick={(e) => { e.preventDefault(); scrollToSection('vehicles'); }}>Fleet</a></li>
-                <li><a href="#technology" onClick={(e) => { e.preventDefault(); scrollToSection('technology'); }}>Technology</a></li>
-                <li><Link to="/about">About</Link></li>
+                <li><a href="#fleet" onClick={(e) => { e.preventDefault(); scrollToSection('vehicles'); }}>{t('Fleet')}</a></li>
+                <li><a href="#technology" onClick={(e) => { e.preventDefault(); scrollToSection('technology'); }}>{t('Technology')}</a></li>
+                <li><Link to="/about">{t('About')}</Link></li>
               </ul>
-              <button className="nav-cta" onClick={() => navigate('/request-pricing')}>Request Pricing</button>
+              <button className="nav-cta" onClick={() => navigate('/request-pricing')}>{t('Request Pricing')}</button>
             </div>
           </nav>
 
@@ -366,14 +381,14 @@ const AppContent: React.FC = () => {
             </div>
             <div className="hero-content">
               <div className="hero-inner">
-                <h1 className="hero-title">Neval<br/>Mobility</h1>
-                <p className="hero-subtitle">Next Electric Vehicle Alternative</p>
+                <h1 className="hero-title">Neval<br/>{t('Mobility')}</h1>
+                <p className="hero-subtitle">{t('Next Electric Vehicle Alternative')}</p>
                 <div className="hero-buttons">
                   <button 
                     className="btn-primary"
                     onClick={() => navigate('/fleet')}
                   >
-                    Explore Fleet
+                    {t('Explore Fleet')}
                   </button>
                 </div>
               </div>
@@ -383,13 +398,13 @@ const AppContent: React.FC = () => {
           {/* Vehicle Carousel Section with Categories - LAZY LOADED */}
           <section id="vehicles" className="vehicle-section">
             <div className="section-header">
-              <h2 className="section-title">Our Fleet</h2>
+              <h2 className="section-title">{t('Our Fleet')}</h2>
               <p className="section-subtitle">
                 {vehicles.length > 0 
-                  ? `${vehicles.length} ${selectedCategory === 'all' ? 'models' : selectedCategory}. Zero emissions.` 
+                  ? `${vehicles.length} ${selectedCategory === 'all' ? t('models') : selectedCategory}. ${t('Zero emissions')}.` 
                   : selectedCategory !== 'all' 
-                    ? 'No vehicles in this category' 
-                    : 'Loading vehicles...'}
+                    ? t('No vehicles in this category') 
+                    : t('Loading vehicles...')}
               </p>
             </div>
             
@@ -421,10 +436,10 @@ const AppContent: React.FC = () => {
               </Suspense>
             ) : (
               <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
-                {loading ? 'Loading vehicles...' : 
+                {loading ? t('Loading vehicles...') : 
                 selectedCategory !== 'all' ? 
-                'No vehicles available in this category.' : 
-                'No vehicles available at this time.'}
+                t('No vehicles available in this category.') : 
+                t('No vehicles available at this time.')}
               </div>
             )}
           </section>
@@ -440,9 +455,9 @@ const AppContent: React.FC = () => {
               <div className="footer-main">
                 <div className="footer-grid">
                   <div className="footer-column">
-                    <h4>Fleet</h4>
+                    <h4>{t('Fleet')}</h4>
                     <ul>
-                      <li><Link to="/fleet">All Models</Link></li>
+                      <li><Link to="/fleet">{t('All Models')}</Link></li>
                       <li><Link to="/fleet?category=ocean%20network">Ocean Network</Link></li>
                       <li><Link to="/fleet?category=dynasty%20network">Dynasty Network</Link></li>
                       <li><Link to="/fleet?category=denza">Denza</Link></li>
@@ -450,24 +465,24 @@ const AppContent: React.FC = () => {
                     </ul>
                   </div>
                   <div className="footer-column">
-                    <h4>Technology</h4>
+                    <h4>{t('Technology')}</h4>
                     <ul>
-                      <li><Link to="/technology/blade-battery">Blade Battery</Link></li>
+                      <li><Link to="/technology/blade-battery">{t('Blade Battery')}</Link></li>
                       <li><Link to="/technology/e-platform">e-Platform 3.0</Link></li>
-                      <li><Link to="/technology/energy-management">Energy Management</Link></li>
+                      <li><Link to="/technology/energy-management">{t('Energy Management')}</Link></li>
                     </ul>
                   </div>
                   <div className="footer-column">
-                    <h4>Support</h4>
+                    <h4>{t('Support')}</h4>
                     <ul>
-                      <li><Link to="/contact">Contact Us</Link></li>
-                      <li><Link to="/request-pricing">Request Pricing</Link></li>
-                      <li><Link to="/about">About</Link></li>
+                      <li><Link to="/contact">{t('Contact Us')}</Link></li>
+                      <li><Link to="/request-pricing">{t('Request Pricing')}</Link></li>
+                      <li><Link to="/about">{t('About')}</Link></li>
                     </ul>
                     
                     {/* Social Media Section */}
                     <div className="footer-socials">
-                      <h4>Socials</h4>
+                      <h4>{t('Socials')}</h4>
                       <div className="social-icons">
                         <a
                           href="https://www.instagram.com/nevalmobility"
@@ -502,10 +517,29 @@ const AppContent: React.FC = () => {
                 </div>
               </div>
               
-              {/* FIXED FOOTER BOTTOM WITH ADMIN ACCESS */}
+              {/* FIXED FOOTER BOTTOM WITH LANGUAGE SELECTOR */}
               <div className="footer-bottom">
-                <div className="footer-copyright">
-                  <p>&copy; 2025 Neval Mobility. All rights reserved.</p>
+                <div className="footer-copyright" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                  <p>&copy; 2025 Neval Mobility. {t('All rights reserved')}.</p>
+                  
+                  {/* LANGUAGE SELECTOR - MINIMALISTIC */}
+                  <select 
+                    value={language}
+                    onChange={(e) => setLanguage(e.target.value as 'sq' | 'en')}
+                    style={{
+                      backgroundColor: 'transparent',
+                      color: '#6ec184',
+                      padding: '4px 8px',
+                      border: '1px solid #333',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      fontSize: '12px',
+                      outline: 'none'
+                    }}
+                  >
+                    <option value="sq" style={{ backgroundColor: '#000' }}>SQ</option>
+                    <option value="en" style={{ backgroundColor: '#000' }}>EN</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -520,7 +554,7 @@ const AppContent: React.FC = () => {
         </div>
       } />
       
-      {/* All Other Routes with Lazy Loading */}
+      {/* All Other Routes with Lazy Loading - KEEP EXACTLY AS IS */}
       <Route 
         path="/car/:carId" 
         element={
@@ -601,14 +635,16 @@ const AppContent: React.FC = () => {
   );
 };
 
-// Main App Component with AuthProvider
+// Main App Component with LanguageProvider and AuthProvider
 const App: React.FC = () => {
   return (
-    <AuthProvider>
-      <Router>
-        <AppContent />
-      </Router>
-    </AuthProvider>
+    <LanguageProvider>
+      <AuthProvider>
+        <Router>
+          <AppContent />
+        </Router>
+      </AuthProvider>
+    </LanguageProvider>
   );
 };
 

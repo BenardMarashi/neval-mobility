@@ -6,11 +6,13 @@ import { Car } from '../../types/Car';
 import { PricingRequest } from '../../types/PricingRequest';
 import CarManager from './CarManager';
 import PricingRequestManager from './PricingRequestManager';
+import { useLanguage } from '../../contexts/LanguageContext';
 import './AdminDashboard.css';
 
 type TabType = 'cars' | 'pricingRequests';
 
 const AdminDashboard: React.FC = () => {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<TabType>('cars');
   const [cars, setCars] = useState<Car[]>([]);
   const [pricingRequests, setPricingRequests] = useState<PricingRequest[]>([]);
@@ -93,20 +95,20 @@ const AdminDashboard: React.FC = () => {
   };
 
   if (loading) {
-    return <div className="loading">Loading dashboard...</div>;
+    return <div className="loading">{t('Loading dashboard...')}</div>;
   }
 
   return (
     <div className="admin-dashboard">
       <header className="admin-header">
         <div className="admin-header-content">
-          <h1>Admin Dashboard</h1>
+          <h1>{t('Admin Dashboard')}</h1>
           <div className="admin-header-actions">
             <button onClick={() => navigate('/')} className="btn-secondary">
-              View Site
+              {t('View Site')}
             </button>
             <button onClick={handleSignOut} className="btn-primary">
-              Sign Out
+              {t('Sign Out')}
             </button>
           </div>
         </div>
@@ -117,13 +119,13 @@ const AdminDashboard: React.FC = () => {
           className={`tab ${activeTab === 'cars' ? 'active' : ''}`}
           onClick={() => setActiveTab('cars')}
         >
-          Cars ({cars.length})
+          {t('Cars')} ({cars.length})
         </button>
         <button
           className={`tab ${activeTab === 'pricingRequests' ? 'active' : ''}`}
           onClick={() => setActiveTab('pricingRequests')}
         >
-          Pricing Requests ({pricingRequests.filter(q => q.status === 'pending').length} new)
+          {t('Pricing Requests')} ({pricingRequests.filter(q => q.status === 'pending').length} {t('new')})
         </button>
       </div>
 

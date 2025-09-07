@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 import './Carousel.css';
 
 interface CarItem {
@@ -23,6 +24,7 @@ const ImprovedCarousel: React.FC<ImprovedCarouselProps> = ({
   items, 
   onRequestPricing 
 }) => {
+  const { t } = useLanguage();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsPerView, setItemsPerView] = useState(3);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -106,13 +108,13 @@ const ImprovedCarousel: React.FC<ImprovedCarouselProps> = ({
   return (
     <div className="improved-carousel-container">
       <div className="carousel-header">
-        <h2 className="carousel-title">Our Fleet</h2>
+        <h2 className="carousel-title">{t('Our Fleet')}</h2>
         <div className="carousel-controls">
           <button 
             className={`carousel-nav-btn ${currentIndex === 0 ? 'disabled' : ''}`}
             onClick={handlePrevious}
             disabled={currentIndex === 0}
-            aria-label="Previous"
+            aria-label={t('Previous')}
           >
             <ChevronLeft size={24} />
           </button>
@@ -120,7 +122,7 @@ const ImprovedCarousel: React.FC<ImprovedCarouselProps> = ({
             className={`carousel-nav-btn ${currentIndex >= maxIndex ? 'disabled' : ''}`}
             onClick={handleNext}
             disabled={currentIndex >= maxIndex}
-            aria-label="Next"
+            aria-label={t('Next')}
           >
             <ChevronRight size={24} />
           </button>
@@ -155,7 +157,7 @@ const ImprovedCarousel: React.FC<ImprovedCarouselProps> = ({
                     loading="lazy"
                   />
                   <div className="car-card-overlay">
-                    <span className="view-details">View Details</span>
+                    <span className="view-details">{t('View Details')}</span>
                   </div>
                 </div>
                 <div className="car-card-content">
@@ -180,7 +182,7 @@ const ImprovedCarousel: React.FC<ImprovedCarouselProps> = ({
                 setTimeout(() => setIsAnimating(false), 300);
               }
             }}
-            aria-label={`Go to slide ${index + 1}`}
+            aria-label={`${t('Go to slide')} ${index + 1}`}
           />
         ))}
       </div>

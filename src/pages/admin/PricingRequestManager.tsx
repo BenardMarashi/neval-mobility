@@ -4,11 +4,14 @@ import { db, updateDoc, doc } from '../../services/firebase';
 import { PricingRequest, PricingRequestStatus } from '../../types/PricingRequest';
 import './PricingRequestManager.css';
 import { serverTimestamp } from 'firebase/firestore';
+import { useLanguage } from '../../contexts/LanguageContext';
+
 interface PricingRequestManagerProps {
   pricingRequests: PricingRequest[];
 }
 
 const PricingRequestManager: React.FC<PricingRequestManagerProps> = ({ pricingRequests }) => {
+  const { t } = useLanguage();
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [notes, setNotes] = useState<{ [key: string]: string }>({});
 
@@ -60,10 +63,10 @@ const PricingRequestManager: React.FC<PricingRequestManagerProps> = ({ pricingRe
   return (
     <div className="pricing-request-manager">
       <div className="manager-header">
-        <h2>Pricing Requests</h2>
+        <h2>{t('Pricing Requests')}</h2>
         <div className="stats">
-          <span>Total: {pricingRequests.length}</span>
-          <span>Pending: {pricingRequests.filter(q => q.status === 'pending').length}</span>
+          <span>{t('Total')}: {pricingRequests.length}</span>
+          <span>{t('Pending')}: {pricingRequests.filter(q => q.status === 'pending').length}</span>
         </div>
       </div>
 
@@ -86,7 +89,7 @@ const PricingRequestManager: React.FC<PricingRequestManagerProps> = ({ pricingRe
                   className="status-badge"
                   style={{ backgroundColor: getStatusColor(request.status) }}
                 >
-                  {request.status}
+                  {t(request.status)}
                 </span>
               </div>
             </div>
@@ -95,61 +98,61 @@ const PricingRequestManager: React.FC<PricingRequestManagerProps> = ({ pricingRe
               <div className="request-details">
                 <div className="detail-grid">
                   <div className="detail-item">
-                    <label>Email:</label>
+                    <label>{t('Email')}:</label>
                     <a href={`mailto:${request.email}`}>{request.email}</a>
                   </div>
                   <div className="detail-item">
-                    <label>Phone:</label>
+                    <label>{t('Phone')}:</label>
                     <a href={`tel:${request.phone}`}>{request.phone}</a>
                   </div>
                   <div className="detail-item">
-                    <label>Preferred Date:</label>
-                    <span>{request.preferredDate || 'Not specified'}</span>
+                    <label>{t('Preferred Date')}:</label>
+                    <span>{request.preferredDate || t('Not specified')}</span>
                   </div>
                   <div className="detail-item">
-                    <label>Preferred Time:</label>
-                    <span>{request.preferredTime || 'Not specified'}</span>
+                    <label>{t('Preferred Time')}:</label>
+                    <span>{request.preferredTime || t('Not specified')}</span>
                   </div>
                   <div className="detail-item">
-                    <label>Location:</label>
-                    <span>{request.location || 'Not specified'}</span>
+                    <label>{t('Location')}:</label>
+                    <span>{request.location || t('Not specified')}</span>
                   </div>
                 </div>
 
                 {request.message && (
                   <div className="detail-message">
-                    <label>Message:</label>
+                    <label>{t('Message')}:</label>
                     <p>{request.message}</p>
                   </div>
                 )}
 
                 <div className="detail-actions">
                   <div className="status-update">
-                    <label>Update Status:</label>
+                    <label>{t('Update Status')}:</label>
                     <select 
                       value={request.status}
                       onChange={(e) => handleStatusChange(request, e.target.value as PricingRequestStatus)}
                     >
-                      <option value="pending">Pending</option>
-                      <option value="contacted">Contacted</option>
-                      <option value="completed">Completed</option>
-                      <option value="cancelled">Cancelled</option>
+                      <option value="pending">{t('Pending')}</option>
+                      <option value="contacted">{t('Contacted')}</option>
+                      <option value="completed">{t('Completed')}</option>
+                      <option value="cancelled">{t('Cancelled')}</option>
                     </select>
                   </div>
 
                   <div className="notes-section">
-                    <label>Admin Notes:</label>
+                    <label>{t('Admin Notes')}:</label>
                     <textarea
                       value={notes[request.id!] ?? request.notes ?? ''}
                       onChange={(e) => setNotes({ ...notes, [request.id!]: e.target.value })}
-                      placeholder="Add internal notes..."
+                      placeholder={t('Add internal notes...')}
                       rows={3}
                     />
                     <button 
                       onClick={() => handleNotesUpdate(request)}
                       className="btn-save-notes"
                     >
-                      Save Notes
+                      {t('Save Notes')}
                     </button>
                   </div>
                 </div>
@@ -160,7 +163,7 @@ const PricingRequestManager: React.FC<PricingRequestManagerProps> = ({ pricingRe
         
         {pricingRequests.length === 0 && (
           <div className="empty-state">
-            <p>No pricing requests yet.</p>
+            <p>{t('No pricing requests yet.')}</p>
           </div>
         )}
       </div>

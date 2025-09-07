@@ -461,7 +461,9 @@
     padding: 16px 20px;
     height: 70px;
   }
-  
+  .fleet-footer {
+    padding: 24px 20px;
+  }
   .logo-img {
     height: 35px;
   }
@@ -575,4 +577,24 @@
   .cta-content h2 {
     font-size: 28px;
   }
+}
+
+/* Footer */
+.fleet-footer {
+  background: #000;
+  color: white;
+  padding: 40px 48px;
+  margin-top: auto;
+}
+
+.fleet-footer-content {
+  max-width: 1920px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.fleet-footer-content p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 300;
 }

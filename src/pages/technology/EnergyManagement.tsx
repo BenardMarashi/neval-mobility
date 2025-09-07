@@ -1,20 +1,21 @@
-// src/pages/technology/EnergyManagement.tsx
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLanguage } from '../../contexts/LanguageContext'; // ADD THIS
 import './TechnologyPages.css';
 
 const EnergyManagement: React.FC = () => {
+  const { t } = useLanguage(); // ADD THIS
   const [activeMode, setActiveMode] = useState<'eco' | 'normal' | 'sport'>('normal');
 
   return (
     <div className="tech-page energy-management">
       <nav className="tech-nav">
-        <Link to="/" className="back-link">← Back to Home</Link>
+        <Link to="/" className="back-link">{t('← Back to Home')}</Link>
         <div className="tech-nav-links">
-          <Link to="/technology/blade-battery">Blade Battery</Link>
-          <Link to="/technology/e-platform">e-Platform 3.0</Link>
-          <Link to="/technology/energy-management" className="active">Energy Management</Link>
+          <Link to="/technology/blade-battery">{t('Blade Battery')}</Link>
+          <Link to="/technology/e-platform">{t('e-Platform 3.0')}</Link>
+          <Link to="/technology/energy-management" className="active">{t('Energy Management')}</Link>
         </div>
       </nav>
 
@@ -27,7 +28,7 @@ const EnergyManagement: React.FC = () => {
             transition={{ duration: 0.6 }}
             className="hero-badge"
           >
-            Intelligent Optimization
+            {t('Intelligent Optimization')}
           </motion.div>
           
           <motion.h1
@@ -35,7 +36,7 @@ const EnergyManagement: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            Energy Management System
+            {t('Energy Management System')}
           </motion.h1>
           
           <motion.p
@@ -43,8 +44,7 @@ const EnergyManagement: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            AI-powered system that maximizes efficiency and minimizes environmental impact. 
-            Smart regeneration, V2G capability, and adaptive driving modes.
+            {t('AI-powered system that maximizes efficiency and minimizes environmental impact. Smart regeneration, V2G capability, and adaptive driving modes.')}
           </motion.p>
           
           <motion.div 
@@ -55,15 +55,15 @@ const EnergyManagement: React.FC = () => {
           >
             <div className="hero-stat">
               <span className="stat-number">90%</span>
-              <span className="stat-text">Energy Recovery</span>
+              <span className="stat-text">{t('Energy Recovery')}</span>
             </div>
             <div className="hero-stat">
               <span className="stat-number">V2G</span>
-              <span className="stat-text">Grid Support</span>
+              <span className="stat-text">{t('Grid Support')}</span>
             </div>
             <div className="hero-stat">
               <span className="stat-number">+30%</span>
-              <span className="stat-text">City Range</span>
+              <span className="stat-text">{t('City Range')}</span>
             </div>
           </motion.div>
         </div>
@@ -72,7 +72,7 @@ const EnergyManagement: React.FC = () => {
       {/* Driving Modes */}
       <section className="tech-section driving-modes">
         <div className="section-content">
-          <h2>Adaptive Driving Modes</h2>
+          <h2>{t('Adaptive Driving Modes')}</h2>
           <div className="mode-selector">
             {(['eco', 'normal', 'sport'] as const).map(mode => (
               <button
@@ -80,7 +80,7 @@ const EnergyManagement: React.FC = () => {
                 className={`mode-btn ${activeMode === mode ? 'active' : ''}`}
                 onClick={() => setActiveMode(mode)}
               >
-                {mode.charAt(0).toUpperCase() + mode.slice(1)}
+                {t(mode.charAt(0).toUpperCase() + mode.slice(1))}
               </button>
             ))}
           </div>
@@ -96,60 +96,60 @@ const EnergyManagement: React.FC = () => {
               >
                 {activeMode === 'eco' && (
                   <>
-                    <h3>ECO Mode - Maximum Efficiency</h3>
-                    <p>Optimizes every joule of energy for maximum range</p>
+                    <h3>{t('ECO Mode - Maximum Efficiency')}</h3>
+                    <p>{t('Optimizes every joule of energy for maximum range')}</p>
                     <div className="mode-stats">
                       <div className="stat">
                         <span className="value">+20%</span>
-                        <span className="label">Range Extension</span>
+                        <span className="label">{t('Range Extension')}</span>
                       </div>
                       <div className="stat">
                         <span className="value">-30%</span>
-                        <span className="label">Power Consumption</span>
+                        <span className="label">{t('Power Consumption')}</span>
                       </div>
                       <div className="stat">
                         <span className="value">100%</span>
-                        <span className="label">Regeneration</span>
+                        <span className="label">{t('Regeneration')}</span>
                       </div>
                     </div>
                   </>
                 )}
                 {activeMode === 'normal' && (
                   <>
-                    <h3>Normal Mode - Balanced Performance</h3>
-                    <p>Intelligent balance between efficiency and responsiveness</p>
+                    <h3>{t('Normal Mode - Balanced Performance')}</h3>
+                    <p>{t('Intelligent balance between efficiency and responsiveness')}</p>
                     <div className="mode-stats">
                       <div className="stat">
-                        <span className="value">Optimal</span>
-                        <span className="label">Daily Driving</span>
+                        <span className="value">{t('Optimal')}</span>
+                        <span className="label">{t('Daily Driving')}</span>
                       </div>
                       <div className="stat">
-                        <span className="value">Smart</span>
-                        <span className="label">Power Delivery</span>
+                        <span className="value">{t('Smart')}</span>
+                        <span className="label">{t('Power Delivery')}</span>
                       </div>
                       <div className="stat">
                         <span className="value">70%</span>
-                        <span className="label">Regeneration</span>
+                        <span className="label">{t('Regeneration')}</span>
                       </div>
                     </div>
                   </>
                 )}
                 {activeMode === 'sport' && (
                   <>
-                    <h3>Sport Mode - Peak Performance</h3>
-                    <p>Maximum power delivery for spirited driving</p>
+                    <h3>{t('Sport Mode - Peak Performance')}</h3>
+                    <p>{t('Maximum power delivery for spirited driving')}</p>
                     <div className="mode-stats">
                       <div className="stat">
                         <span className="value">100%</span>
-                        <span className="label">Power Available</span>
+                        <span className="label">{t('Power Available')}</span>
                       </div>
                       <div className="stat">
-                        <span className="value">Enhanced</span>
-                        <span className="label">Throttle Response</span>
+                        <span className="value">{t('Enhanced')}</span>
+                        <span className="label">{t('Throttle Response')}</span>
                       </div>
                       <div className="stat">
                         <span className="value">50%</span>
-                        <span className="label">Regeneration</span>
+                        <span className="label">{t('Regeneration')}</span>
                       </div>
                     </div>
                   </>
@@ -163,26 +163,24 @@ const EnergyManagement: React.FC = () => {
       {/* Regenerative Braking */}
       <section className="tech-section regeneration">
         <div className="section-content">
-          <h2>Regenerative Braking System</h2>
+          <h2>{t('Regenerative Braking System')}</h2>
           <div className="regen-explanation">
-            <h3>Energy Recovery Technology</h3>
+            <h3>{t('Energy Recovery Technology')}</h3>
             <p>
-              Our advanced regenerative braking system captures up to 90% of kinetic energy during 
-              deceleration, converting it back into electricity to charge the battery. This recovered 
-              energy would otherwise be lost as heat in traditional friction brakes.
+              {t('Our advanced regenerative braking system captures up to 90% of kinetic energy during deceleration, converting it back into electricity to charge the battery. This recovered energy would otherwise be lost as heat in traditional friction brakes.')}
             </p>
             <div className="regen-benefits">
               <div className="benefit">
                 <strong>30%</strong>
-                <span>Range increase in city driving</span>
+                <span>{t('Range increase in city driving')}</span>
               </div>
               <div className="benefit">
                 <strong>70%</strong>
-                <span>Less brake pad wear</span>
+                <span>{t('Less brake pad wear')}</span>
               </div>
               <div className="benefit">
-                <strong>5 tons</strong>
-                <span>CO₂ saved per year</span>
+                <strong>5 {t('tons')}</strong>
+                <span>{t('CO₂ saved per year')}</span>
               </div>
             </div>
           </div>
@@ -192,26 +190,24 @@ const EnergyManagement: React.FC = () => {
       {/* Smart Grid Integration */}
       <section className="tech-section grid-integration">
         <div className="section-content">
-          <h2>Vehicle-to-Grid (V2G) Technology</h2>
+          <h2>{t('Vehicle-to-Grid (V2G) Technology')}</h2>
           <div className="v2g-info">
-            <h3>Your Car as a Power Station</h3>
+            <h3>{t('Your Car as a Power Station')}</h3>
             <p>
-              With V2G technology, your vehicle becomes a mobile energy storage unit. During peak 
-              renewable energy production, charge your car with clean energy. During peak demand, 
-              sell energy back to the grid or power your home during outages.
+              {t('With V2G technology, your vehicle becomes a mobile energy storage unit. During peak renewable energy production, charge your car with clean energy. During peak demand, sell energy back to the grid or power your home during outages.')}
             </p>
             <div className="v2g-stats">
               <div className="stat">
                 <span className="value">$2,000</span>
-                <span className="label">Annual earnings potential</span>
+                <span className="label">{t('Annual earnings potential')}</span>
               </div>
               <div className="stat">
-                <span className="value">3 days</span>
-                <span className="label">Home backup power</span>
+                <span className="value">3 {t('days')}</span>
+                <span className="label">{t('Home backup power')}</span>
               </div>
               <div className="stat">
                 <span className="value">100%</span>
-                <span className="label">Renewable integration</span>
+                <span className="label">{t('Renewable integration')}</span>
               </div>
             </div>
           </div>
@@ -220,9 +216,9 @@ const EnergyManagement: React.FC = () => {
 
       {/* Call to Action */}
       <section className="tech-cta">
-        <h2>Smart Energy for a Sustainable Future</h2>
-        <p>Our intelligent systems reduce grid strain and maximize renewable energy use</p>
-        <Link to="/" className="cta-button">Experience Smart Driving</Link>
+        <h2>{t('Smart Energy for a Sustainable Future')}</h2>
+        <p>{t('Our intelligent systems reduce grid strain and maximize renewable energy use')}</p>
+        <Link to="/" className="cta-button">{t('Experience Smart Driving')}</Link>
       </section>
     </div>
   );

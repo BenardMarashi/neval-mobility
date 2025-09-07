@@ -4,42 +4,44 @@ import { motion } from 'framer-motion';
 import { Battery, Gauge, Zap } from 'lucide-react';
 import './AnimatedFeatures.css';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const AnimatedFeatures: React.FC = () => {
+  const { t } = useLanguage();
   const features = [
     {
       id: 'battery',
-      title: 'Blade Battery Technology',
-      description: 'Revolutionary LFP battery technology delivering unmatched safety, longevity, and performance. Over 1 million kilometers lifespan.',
+      title: t('Blade Battery Technology'),
+      description: t('Revolutionary LFP battery technology delivering unmatched safety, longevity, and performance. Over 1 million kilometers lifespan.'),
       icon: <Battery size={48} style={{ color: '#6ec184', stroke: '#6ec184' }} />,
       stats: [
-        { value: '1M+', label: 'km lifespan' },
-        { value: '800V', label: 'architecture' },
-        { value: '18min', label: '10-80% charge' }
+        { value: '1M+', label: t('km lifespan') },
+        { value: '800V', label: t('architecture') },
+        { value: '18min', label: t('10-80% charge') }
       ],
       link: '/technology/blade-battery'
     },
     {
       id: 'driving',
-      title: 'e-Platform 3.0',
-      description: '8-in-1 integrated platform with revolutionary efficiency. Simplified architecture for maximum performance.',
+      title: t('e-Platform 3.0'),
+      description: t('8-in-1 integrated platform with revolutionary efficiency. Simplified architecture for maximum performance.'),
       icon: <Gauge size={48} style={{ color: '#6ec184', stroke: '#6ec184' }} />,
       stats: [
-        { value: '8-in-1', label: 'Integration' },
-        { value: '89%', label: 'Efficiency' },
-        { value: '-40%', label: 'Volume' }
+        { value: '8-in-1', label: t('Integration') },
+        { value: '89%', label: t('Efficiency') },
+        { value: '-40%', label: t('Volume') }
       ],
       link: '/technology/e-platform'
     },
     {
       id: 'charging',
-      title: 'Energy Management',
-      description: 'Intelligent energy optimization with regenerative braking and V2G capability. Smart grid integration.',
+      title: t('Energy Management'),
+      description: t('Intelligent energy optimization with regenerative braking and V2G capability. Smart grid integration.'),
       icon: <Zap size={48} style={{ color: '#6ec184', stroke: '#6ec184' }} />,
       stats: [
-        { value: '90%', label: 'Energy Recovery' },
-        { value: 'V2G', label: 'Grid Support' },
-        { value: '+30%', label: 'City Range' }
+        { value: '90%', label: t('Energy Recovery') },
+        { value: 'V2G', label: t('Grid Support') },
+        { value: '+30%', label: t('City Range') }
       ],
       link: '/technology/energy-management'
     }
@@ -82,8 +84,8 @@ const AnimatedFeatures: React.FC = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="features-title">Advanced Technology</h2>
-          <p className="features-subtitle">Click to explore our revolutionary innovations</p>
+          <h2 className="features-title">{t('Advanced Technology')}</h2>
+          <p className="features-subtitle">{t('Click to explore our revolutionary innovations')}</p>
         </motion.div>
 
         <motion.div 
@@ -129,7 +131,7 @@ const AnimatedFeatures: React.FC = () => {
                 </div>
                 
                 <div className="feature-link" style={{ color: '#6ec184' }}>
-                  Learn More →
+                  {t('Learn More')} →
                 </div>
               </motion.div>
             </Link>
@@ -145,7 +147,7 @@ const AnimatedFeatures: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.3 }}
         >
           <div className="sustainability-content">
-            <h3 className="sustainability-title">Every Kilometer Matters</h3>
+            <h3 className="sustainability-title">{t('Every Kilometer Matters')}</h3>
             <div className="sustainability-stats">
               <motion.div 
                 className="sustainability-stat"
@@ -155,7 +157,7 @@ const AnimatedFeatures: React.FC = () => {
                 transition={{ delay: 0.5 }}
               >
                 <div className="sustainability-value">0</div>
-                <div className="sustainability-label">Direct Emissions</div>
+                <div className="sustainability-label">{t('Direct Emissions')}</div>
               </motion.div>
               <motion.div 
                 className="sustainability-stat"
@@ -165,7 +167,7 @@ const AnimatedFeatures: React.FC = () => {
                 transition={{ delay: 0.6 }}
               >
                 <div className="sustainability-value">96%</div>
-                <div className="sustainability-label">Recyclable</div>
+                <div className="sustainability-label">{t('Recyclable')}</div>
               </motion.div>
               <motion.div 
                 className="sustainability-stat"
@@ -175,7 +177,7 @@ const AnimatedFeatures: React.FC = () => {
                 transition={{ delay: 0.7 }}
               >
                 <div className="sustainability-value">-50%</div>
-                <div className="sustainability-label">Carbon vs ICE</div>
+                <div className="sustainability-label">{t('Carbon vs ICE')}</div>
               </motion.div>
             </div>
           </div>
