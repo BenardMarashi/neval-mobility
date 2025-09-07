@@ -169,7 +169,7 @@ const AppContent: React.FC = () => {
     'dynasty network': 0,
     'denza': 0,
     'leopard': 0
-  });
+  }); 
   
   const { isAdmin } = useAuth();
   const navigate = useNavigate();
