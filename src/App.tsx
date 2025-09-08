@@ -7,10 +7,9 @@ import Hyperspeed from './components/HyperSpeed';
 import { Car } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext'; // ADD THIS IMPORT
-import { db, collection, getDocs, query, where, signOutAdmin } from './services/firebase';
+import { db, collection, getDocs, query, where } from './services/firebase';
 import { Car as CarType, CarCategory, CATEGORY_LABELS } from './types/Car';
 import { Instagram, Facebook, Linkedin } from 'lucide-react';
-import CategoryFilter from './components/CategoryFilter';
 import './components/CategoryFilter.css';
 // Lazy load all non-critical components
 const Carousel = lazy(() => import('./components/Carousel'));
@@ -122,6 +121,7 @@ const AdminRouteHandler: React.FC = () => {
   );
 };
 
+
 const AppContent: React.FC = () => {
   const { t, language, setLanguage } = useLanguage(); // ADD THIS
   const [searchParams, setSearchParams] = useSearchParams();
@@ -139,52 +139,76 @@ const AppContent: React.FC = () => {
     'leopard': 0
   });
   
-  const { isAdmin } = useAuth();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    // Function to set the actual viewport height
+    const setViewportHeight = () => {
+      // Get the actual viewport height and set it as a CSS variable
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+
+    // Set initial height
+    setViewportHeight();
+
+    // Update on resize and orientation change
+    window.addEventListener('resize', setViewportHeight);
+    window.addEventListener('orientationchange', setViewportHeight);
+
+    // Also update when the page loads completely
+    window.addEventListener('load', setViewportHeight);
+
+    // Clean up event listeners
+    return () => {
+      window.removeEventListener('resize', setViewportHeight);
+      window.removeEventListener('orientationchange', setViewportHeight);
+      window.removeEventListener('load', setViewportHeight);
+    };
+  }, []);
   // Default vehicles with translation
-  const DEFAULT_VEHICLES = [
-    {
-      id: 'seal',
-      title: "BYD Seal",
-      description: t('Premium electric sedan') + '. 700km ' + t('range') + '. ' + t('From') + ' $65,000',
-      link: "/car/seal",
-      icon: <Car className="h-4 w-4 text-white" />,
-      category: 'ocean network' as CarCategory
-    },
-    {
-      id: 'atto3',
-      title: "BYD Atto 3",
-      description: t('Compact SUV') + '. 420km ' + t('range') + '. ' + t('From') + ' $48,000',
-      link: "/car/atto3",
-      icon: <Car className="h-4 w-4 text-white" />,
-      category: 'dynasty network' as CarCategory
-    },
-    {
-      id: 'tang',
-      title: "BYD Tang",
-      description: t('7-seater SUV') + '. 500km ' + t('range') + '. ' + t('From') + ' $72,000',
-      link: "/car/tang",
-      icon: <Car className="h-4 w-4 text-white" />,
-      category: 'dynasty network' as CarCategory
-    },
-    {
-      id: 'dolphin',
-      title: "BYD Dolphin",
-      description: t('City car') + '. 405km ' + t('range') + '. ' + t('From') + ' $35,000',
-      link: "/car/dolphin",
-      icon: <Car className="h-4 w-4 text-white" />,
-      category: 'ocean network' as CarCategory
-    },
-    {
-      id: 'han',
-      title: "BYD Han",
-      description: t('Executive sedan') + '. 605km ' + t('range') + '. ' + t('From') + ' $78,000',
-      link: "/car/han",
-      icon: <Car className="h-4 w-4 text-white" />,
-      category: 'dynasty network' as CarCategory
-    },
-  ];
+const DEFAULT_VEHICLES = React.useMemo(() => [
+  {
+    id: 'seal',
+    title: "BYD Seal",
+    description: t('Premium electric sedan') + '. 700km ' + t('range') + '. ' + t('From') + ' $65,000',
+    link: "/car/seal",
+    icon: <Car className="h-4 w-4 text-white" />,
+    category: 'ocean network' as CarCategory
+  },
+  {
+    id: 'atto3',
+    title: "BYD Atto 3",
+    description: t('Compact SUV') + '. 420km ' + t('range') + '. ' + t('From') + ' $48,000',
+    link: "/car/atto3",
+    icon: <Car className="h-4 w-4 text-white" />,
+    category: 'dynasty network' as CarCategory
+  },
+  {
+    id: 'tang',
+    title: "BYD Tang",
+    description: t('7-seater SUV') + '. 500km ' + t('range') + '. ' + t('From') + ' $72,000',
+    link: "/car/tang",
+    icon: <Car className="h-4 w-4 text-white" />,
+    category: 'dynasty network' as CarCategory
+  },
+  {
+    id: 'dolphin',
+    title: "BYD Dolphin",
+    description: t('City car') + '. 405km ' + t('range') + '. ' + t('From') + ' $35,000',
+    link: "/car/dolphin",
+    icon: <Car className="h-4 w-4 text-white" />,
+    category: 'ocean network' as CarCategory
+  },
+  {
+    id: 'han',
+    title: "BYD Han",
+    description: t('Executive sedan') + '. 605km ' + t('range') + '. ' + t('From') + ' $78,000',
+    link: "/car/han",
+    icon: <Car className="h-4 w-4 text-white" />,
+    category: 'dynasty network' as CarCategory
+  },
+], [t]);
 
   const [vehicles, setVehicles] = useState<any[]>(DEFAULT_VEHICLES);
   const [allVehicles, setAllVehicles] = useState<any[]>(DEFAULT_VEHICLES);
@@ -271,7 +295,7 @@ const AppContent: React.FC = () => {
     };
     
     fetchCars();
-  }, []);
+  }, [DEFAULT_VEHICLES]);
 
   // Filter vehicles based on selected category
   useEffect(() => {
@@ -291,15 +315,6 @@ const AppContent: React.FC = () => {
       searchParams.set('category', category);
     }
     setSearchParams(searchParams);
-  };
-
-  const handleSignOut = async () => {
-    try {
-      await signOutAdmin();
-      navigate('/');
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
   };
 
   const scrollToSection = (sectionId: string) => {
@@ -322,7 +337,8 @@ const AppContent: React.FC = () => {
             <div className="nav-content">
               <div className="logo">
                 <img 
-                  src="/logo.jpg" 
+                  src="/logo.jpg"
+                  alt="NEVAL" 
                   className="logo-img"
                   loading="eager"
                 />

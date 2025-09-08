@@ -80,6 +80,20 @@ const albanianTranslations: Record<string, string> = {
   'Green Initiative': 'Nisma e Gjelbër',
   
   // ============= ABOUT US PAGE =============
+  'Mobility in a New Light': 'Mobiliteti në një Dritë të Re',
+'At NEVAL, we see mobility in a new light. Our name — Next Electric Vehicle Alternative — captures our vision of offering customers a smarter, greener, and more accessible way to drive.': 'Në NEVAL, ne e shohim mobilitetin në një dritë të re. Emri ynë — Alternativa e Ardhshme e Automjeteve Elektrike — kap vizionin tonë për t\'u ofruar klientëve një mënyrë më të zgjuar, më të gjelbër dhe më të aksesueshme për të drejtuar.',
+'Our Approach': 'Qasja Jonë',
+'We bring BYD electric vehicles to the market through a direct order-based model, ensuring that every client — from individual drivers to large corporations — receives exactly the car they need at a highly competitive price.': 'Ne sjellim automjetet elektrike BYD në treg përmes një modeli të bazuar në porosi direkte, duke siguruar që çdo klient — nga drejtuesit individualë te korporatat e mëdha — të marrë saktësisht makinën që i nevojitet me një çmim shumë konkurrues.',
+'To accelerate sustainable mobility in Albania and beyond. Every vehicle we deliver represents more than transportation — it\'s a commitment to cleaner air, lower costs, and a future where electric driving becomes the standard.': 'Për të përshpejtuar mobilitetin e qëndrueshëm në Shqipëri dhe më gjerë. Çdo automjet që ne dorëzojmë përfaqëson më shumë se transport — është një angazhim për ajër më të pastër, kosto më të ulëta dhe një të ardhme ku drejtimi elektrik bëhet standard.',
+'Our Core Values': 'Vlerat Tona Thelbësore',
+'Every vehicle represents our commitment to cleaner air and a greener future.': 'Çdo automjet përfaqëson angazhimin tonë për ajër më të pastër dhe një të ardhme më të gjelbër.',
+'Accessibility': 'Aksesueshmëria',
+'Making electric mobility accessible through competitive pricing and direct ordering.': 'Duke bërë mobilitetin elektrik të aksesueshëm përmes çmimeve konkurruese dhe porosive direkte.',
+'From individual drivers to large corporations, we ensure everyone gets exactly what they need.': 'Nga drejtuesit individualë te korporatat e mëdha, ne sigurojmë që të gjithë të marrin saktësisht atë që u nevojitet.',
+'Accelerating sustainable mobility in Albania and beyond, making EVs the standard.': 'Përshpejtimi i mobilitetit të qëndrueshëm në Shqipëri dhe më gjerë, duke i bërë automjetet elektrike standard.',
+'Ready to Embrace the Future?': 'Gati të Përqafoni të Ardhmen?',
+'Whether you\'re choosing your first EV or expanding a corporate fleet, NEVAL makes it seamless to order, own, and embrace the future of mobility.': 'Nëse po zgjidhni automjetin tuaj të parë elektrik ose po zgjeroni flotën e korporatës, NEVAL e bën të thjeshtë porositjen, pronësinë dhe përqafimin e së ardhmes së mobilitetit.',
+'Explore Our Fleet': 'Eksploro Flotën Tonë',
   'About Us': 'Rreth Nesh',
   'Our Mission': 'Misioni Ynë',
   'Our Vision': 'Vizioni Ynë',
@@ -95,7 +109,6 @@ const albanianTranslations: Record<string, string> = {
   'Years of Experience': 'Vite Eksperiencë',
   'Global Presence': 'Prezencë Globale',
   'Join Our Journey': 'Bashkohuni në Udhëtimin Tonë',
-  
   // ============= CONTACT PAGE =============
   'Contact Us': 'Na Kontaktoni',
   'Get in Touch': 'Lidhuni me Ne',
@@ -474,7 +487,7 @@ const albanianTranslations: Record<string, string> = {
   'No propagation even when penetrated': 'Pa përhapje edhe kur depërtohet',
   'Experience the Future of Battery Technology': 'Përjetoni të Ardhmen e Teknologjisë së Baterisë',
   'Every Blade Battery vehicle reduces lifetime emissions by 40 tons of CO₂': 'Çdo automjet me Bateri Blade redukton emetimet gjatë jetës me 40 tonë CO₂',
-  'Explore Our Fleet': 'Eksploro Flotën Tonë',
+  'Explore Our Fleet ': 'Eksploro Flotën Tonë',
   
   'Advanced Technology': 'Teknologji e Avancuar',
   'Click to explore our revolutionary innovations': 'Klikoni për të eksploruar inovacionet tona revolucionare',
