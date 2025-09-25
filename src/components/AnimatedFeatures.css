@@ -289,3 +289,16 @@
     opacity: 0;
   }
 }
+
+@media (max-width: 768px) {
+  /* Add top margin to create space from previous sections */
+  .animated-features-section {
+    margin-top: 60px; /* Push down from what's above */
+  }
+  
+  /* Optional: Add extra padding to sustainability section if needed */
+  .sustainability-section {
+    margin-top: 40px; /* Additional spacing for the green card */
+    margin-bottom: 40px;
+  }
+}
