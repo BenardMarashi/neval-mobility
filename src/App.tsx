@@ -503,7 +503,7 @@ const AppContent: React.FC = () => {
                           <Facebook size={20} color="white" />
                         </a>
                         <a
-                          href="https://www.linkedin.com"
+                          href="https://www.linkedin.com/company/nevalmobility/"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="social-link"

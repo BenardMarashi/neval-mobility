@@ -579,6 +579,11 @@ const albanianTranslations: Record<string, string> = {
   'Smart Energy for a Sustainable Future': 'Energji e Zgjuar për një të Ardhme të Qëndrueshme',
   'Our intelligent systems reduce grid strain and maximize renewable energy use': 'Sistemet tona inteligjente reduktojnë ngarkesën e rrjetit dhe maksimizojnë përdorimin e energjisë së rinovueshme',
   'Experience Smart Driving': 'Përjetoni Drejtimin e Zgjuar',
+
+  'Subscribe to our newsletter for updates and exclusive offers': 'Abonohu në buletinin tonë për përditësime dhe oferta ekskluzive',
+  'Newsletter Subscribers': 'Abonentë të Buletinit',
+  'Subscribed': 'I abonuar',
+  'Not subscribed': 'Nuk është i abonuar',
   
   // App.tsx additions
   //'Mobility': 'Mobiliteti',

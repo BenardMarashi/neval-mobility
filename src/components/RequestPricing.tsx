@@ -17,6 +17,7 @@ const RequestPricing: React.FC<RequestPricingProps> = ({ carId, carName }) => {
     preferredDate: '',
     preferredTime: '',
     location: '',
+    newsletter: false,
     message: ''
   });
   const [loading, setLoading] = useState(false);
@@ -48,6 +49,7 @@ const RequestPricing: React.FC<RequestPricingProps> = ({ carId, carName }) => {
         preferredDate: '',
         preferredTime: '',
         location: '',
+        newsletter: false,
         message: ''
       });
       
@@ -61,11 +63,15 @@ const RequestPricing: React.FC<RequestPricingProps> = ({ carId, carName }) => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+  const target = e.target;
+  const value = target.type === 'checkbox' ? (target as HTMLInputElement).checked : target.value;
+  const name = target.name;
+  
+  setFormData({
+    ...formData,
+    [name]: value
+  });
+};
 
   return (
     <section className="request-pricing-form">
@@ -155,7 +161,19 @@ const RequestPricing: React.FC<RequestPricingProps> = ({ carId, carName }) => {
             <option value="evening">Evening (5PM - 8PM)</option>
           </select>
         </div>
-        
+        {/* Newsletter Checkbox */}
+        <div className="newsletter-checkbox">
+          <label>
+            <input
+              type="checkbox"
+              name="newsletter"
+              checked={formData.newsletter}
+              onChange={handleChange}
+              disabled={loading}
+            />
+            <span>Subscribe to our newsletter for updates and exclusive offers</span>
+          </label>
+        </div>
         <textarea
           name="message"
           placeholder="Additional information or special requirements (optional)"

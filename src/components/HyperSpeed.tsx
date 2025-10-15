@@ -812,9 +812,11 @@ class App {
     this.renderer = new THREE.WebGLRenderer({
       antialias: false,
       alpha: true,
+      powerPreference: "high-performance",
     });
+    this.renderer.setClearColor(0x000000, 0);
     this.renderer.setSize(container.offsetWidth, container.offsetHeight, false);
-    this.renderer.setPixelRatio(window.devicePixelRatio);
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
     this.composer = new EffectComposer(this.renderer);
     container.appendChild(this.renderer.domElement);
@@ -981,7 +983,12 @@ class App {
     });
     this.container.addEventListener("contextmenu", this.onContextMenu);
 
-    this.tick();
+    this.composer.render(0);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        this.tick();
+      });
+    });
   }
 
   onMouseDown(ev: MouseEvent) {
@@ -1096,9 +1103,10 @@ class App {
       this.camera.aspect = canvas.clientWidth / canvas.clientHeight;
       this.camera.updateProjectionMatrix();
     }
-    const delta = this.clock.getDelta();
-    this.render(delta);
+    let delta = this.clock.getDelta();
+    delta = Math.min(delta, 0.1);
     this.update(delta);
+    this.render(delta);
     requestAnimationFrame(this.tick);
   }
 }

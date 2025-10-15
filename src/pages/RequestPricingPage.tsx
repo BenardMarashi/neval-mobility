@@ -76,6 +76,7 @@ const RequestPricingPage: React.FC = () => {
     phone: '',
     location: '',
     carId: preselectedCarId || '',
+    newsletter: false,
     additionalInfo: ''
   });
 
@@ -111,6 +112,7 @@ const RequestPricingPage: React.FC = () => {
         ...formData,
         carName: selectedCar?.name || 'Unknown',
         status: 'pending',
+        
         createdAt: serverTimestamp()
       });
       
@@ -127,9 +129,13 @@ const RequestPricingPage: React.FC = () => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const target = e.target;
+    const value = target.type === 'checkbox' ? (target as HTMLInputElement).checked : target.value;
+    const name = target.name;
+    
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
     });
   };
 
@@ -244,7 +250,21 @@ const RequestPricingPage: React.FC = () => {
                   ))}
                 </select>
               </div>
-
+              {/* Newsletter Checkbox */}
+              <div className="form-group full-width">
+                <div className="newsletter-checkbox">
+                  <label>
+                    <input
+                      type="checkbox"
+                      id="newsletter"
+                      name="newsletter"
+                      checked={formData.newsletter}
+                      onChange={handleChange}
+                    />
+                    <span>{t('Subscribe to our newsletter for updates and exclusive offers')}</span>
+                  </label>
+                </div>
+              </div>
               <div className="form-group full-width">
                 <label htmlFor="additionalInfo">{t('Additional Information')}</label>
                 <textarea

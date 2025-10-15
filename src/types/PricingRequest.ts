@@ -14,6 +14,7 @@ export interface PricingRequest {
   preferredTime?: string;
   location?: string;
   message?: string;
+  newsletter?: boolean;
   status: PricingRequestStatus;
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
